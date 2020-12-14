@@ -1,7 +1,22 @@
 #include "grid.h"
 
-Grid::Grid(const bool is_2d, const unsigned X, const unsigned Y, const unsigned Z, const unsigned INTERVAL_X, const unsigned INTERVAL_Y, const unsigned INTERVAL_Z)
-: is_2d_(is_2d), X_(X), Y_(Y), Z_(Z), INTERVAL_X_(INTERVAL_X), INTERVAL_Y_(INTERVAL_Y), INTERVAL_Z_(INTERVAL_Z) {
-    /* TODO: initialize data structures */
-    return;
+Eigen::MatrixXd InitGridPressures(const int rows, const int cols)
+{
+    Eigen::MatrixXd result(rows, cols);
+    result.setZero();
+    return result;
+}
+
+Eigen::MatrixXd InitGridVelocityU(const int rows, const int cols); {
+    /* need to add one since num_borders = num_grid + 1 */
+    Eigen::MatrixXd result(rows, cols+1);
+    result.setZero();
+    return result;
+}
+
+Eigen::MatrixXd InitGridVelocityV(const int rows, const int cols) {
+    /* need to add one since num_borders = num_grid + 1 */
+    Eigen::MatrixXd result(rows+1, cols);
+    result.setZero();
+    return result;
 }

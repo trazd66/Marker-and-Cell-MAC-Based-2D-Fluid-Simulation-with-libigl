@@ -99,7 +99,6 @@ bool draw(igl::opengl::glfw::Viewer & viewer) {
             PE += V_spring;
         }
         
-        Visualize::add_energy(t, KE, PE);
 
     //update vertex positions using simulation
     Visualize::update_vertex_positions(0, P.transpose()*q + x0);

@@ -38,7 +38,6 @@ namespace Visualize {
 
     igl::opengl::glfw::Viewer & viewer();
 
-    const std::vector<unsigned int> & picked_vertices(); 
 }
 
 

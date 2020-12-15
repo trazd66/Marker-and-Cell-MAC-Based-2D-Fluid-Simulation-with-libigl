@@ -14,6 +14,20 @@ namespace Eigen {
     //sparse types
     using SparseMatrixd = Eigen::SparseMatrix<double>;
 
+    
+    //Tensor types
+    struct TensorXd{
+        std::vector<Eigen::MatrixXd> data;
+
+        void init_tensor(const int x,const int y,const int z){
+            for (size_t i = 0; i < x; i++)
+            {
+                data.push_back(Eigen::MatrixXd(y,z));
+            }
+            
+        };
+    };
+
 }
 
 #endif 

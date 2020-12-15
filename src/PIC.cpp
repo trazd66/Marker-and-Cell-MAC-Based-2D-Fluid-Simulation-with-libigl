@@ -1,4 +1,4 @@
-#include "PIC.h"
+#include <PIC.h>
 
 /*
     Reconstruct particle velocity u from grid velocity using bilinear interpolation.

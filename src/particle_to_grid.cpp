@@ -1,4 +1,4 @@
-#include "particle_to_grid.h"
+#include <particle_to_grid.h>
 
 /*
     Accumulate v of the single particle onto the whole grid matrix using bilinear interpolation.

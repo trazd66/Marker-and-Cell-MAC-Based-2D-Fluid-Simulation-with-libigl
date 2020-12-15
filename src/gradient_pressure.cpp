@@ -1,4 +1,4 @@
-#include "gradient_pressure.h"
+#include <gradient_pressure.h>
 
 /*
     Compute gradient of the pressure at given grid location (x,y), storing to gradient_p

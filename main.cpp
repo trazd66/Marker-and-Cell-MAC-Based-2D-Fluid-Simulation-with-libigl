@@ -39,14 +39,14 @@ void simulate()
     {
         /*
             1. Advection natively satisfied because no acceleration involved during movement of particles.
-            2. TODO: update particle velocities due to gravity.
+            2. update particle velocities due to gravity.
             3. TODO: for each particle update grid velocity (particle -> grid).
             4. TODO: for each particle do pressure projection.
             5. TODO: for each particle update particle velocity from grid (grid -> particle).
         */
 
        for(int i = 0; i < M_particles.rows(); i++) {
-
+           M_particles_v(i) += g(1) * dt;
        }
 
         t += dt;

@@ -19,14 +19,18 @@ bool simulating = true;
 
 double t = 0;      //simulation time
 double dt = 0.005; //time step
+Eigen::Vector2d g(0., -9.8); // gravity acceleration
 
-const int bb_size_x = 50; // x dimension of the bounding box
-const int bb_size_y = 50; // y dimension of the bounding box
+const int bb_size_x = 50; // x dimension of the bounding box -> number of grids in x axis
+const int bb_size_y = 50; // y dimension of the bounding box -> number of grids in y axis
 const int grid_interval = 5.0; // size of the grid interval, determines the number of grid cells
-const int num_particles = ((int)(bb_size_x/grid_interval)) * ((int)(bb_size_y/grid_interval)); // number of particles
+const int num_particles = 1000; // number of particles
 Eigen::MatrixXd M_particles; // the particle matrix
+Eigen::VectorXd M_particles_u; // particle velocity u
+Eigen::VectorXd M_particles_v; // particle velocity v
 Eigen::MatrixXd M_u; // M_u a 2D matrix that contains the x velociies of the grid
 Eigen::MatrixXd M_v; // M_v a 2D matrix that contains the y velociies of the grid
+Eigen::MatrixXd M_pressures; // Grid pressure matrix
 
 void simulate()
 {
@@ -41,6 +45,10 @@ void simulate()
             5. TODO: for each particle update particle velocity from grid (grid -> particle).
         */
 
+       for(int i = 0; i < M_particles.rows(); i++) {
+
+       }
+
         t += dt;
     }
 }
@@ -54,7 +62,7 @@ bool draw(igl::opengl::glfw::Viewer &viewer)
 int main(int argc, char **argv)
 {
     // initial setup
-    init_state_2d(bb_size_x, bb_size_y, grid_interval, num_particles, M_particles, M_u, M_v);
+    init_state_2d(bb_size_x, bb_size_y, grid_interval, num_particles, M_particles, M_u, M_v, M_particles_u, M_particles_v, M_pressures);
 
     //run simulation in seperate thread to avoid slowing down the UI
     std::thread simulation_thread(simulate);

@@ -4,7 +4,7 @@
     Compute gradient of the pressure at given grid location (x,y), storing to gradient_p
     EFFECT: Updates gradient_p
 */
-void get_gradient_pressure(Eigen::Vector4d gradient_p, Eigen::MatrixXd pressures, int x, int y, double interval_x, double interval_y, double alpha)
+void get_gradient_pressure(Eigen::Vector4d &gradient_p, Eigen::MatrixXd pressures, int x, int y, double interval_x, double interval_y, double alpha)
 {
     assert(interval_x > 0 && "interval x should be greater than 0.");
     assert(interval_y > 0 && "interval y should be greater than 0.");

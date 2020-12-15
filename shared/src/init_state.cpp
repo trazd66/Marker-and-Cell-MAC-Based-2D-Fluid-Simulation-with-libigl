@@ -29,8 +29,8 @@ void init_state_2d(const int bb_size_x,const int bb_size_y,
                     M_particles = Eigen::MatrixXd(num_particles,3);
 
                     M_p = Eigen::MatrixXd(bb_size_x,bb_size_y);
-                    M_u = Eigen::MatrixXd(bb_size_x,bb_size_y + 1);
-                    M_v = Eigen::MatrixXd(bb_size_x + 1,bb_size_y);
+                    M_u = Eigen::MatrixXd(bb_size_x + 1,bb_size_y);
+                    M_v = Eigen::MatrixXd(bb_size_x,bb_size_y + 1);
 
                     M_p.setZero();
                     M_u.setZero();

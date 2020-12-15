@@ -9,16 +9,14 @@ void init_state_3d(const int bb_size_x,const int bb_size_y,const int bb_size_z,
                     M_p = Eigen::TensorXd();
                     M_p.init_tensor(bb_size_x,bb_size_y,bb_size_z);
 
-
-                    //TODO: Figure out the grid allocation for the 3D case
                     M_u = Eigen::TensorXd();
-                    M_u.init_tensor(bb_size_x,bb_size_y,bb_size_z);
+                    M_u.init_tensor(bb_size_x + 1,bb_size_y,bb_size_z);
 
                     M_v = Eigen::TensorXd();
-                    M_v.init_tensor(bb_size_x,bb_size_y,bb_size_z);
+                    M_v.init_tensor(bb_size_x,bb_size_y + 1,bb_size_z);
 
                     M_w = Eigen::TensorXd();
-                    M_w.init_tensor(bb_size_x,bb_size_y,bb_size_z);
+                    M_w.init_tensor(bb_size_x,bb_size_y,bb_size_z + 1);
                 }
 
 

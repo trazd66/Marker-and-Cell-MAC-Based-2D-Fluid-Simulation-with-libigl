@@ -11,6 +11,7 @@
 #include <init_state.h>
 #include <particle_to_grid.h>
 #include <gradient_pressure.h>
+#include <pressure_matrix_solve.h>
 #include <PIC.h>
 
 //Simulation State

@@ -24,10 +24,14 @@ void simulate()
 
     while (simulating)
     {
+        /*
+            1. Advection natively satisfied because no acceleration involved during movement of particles.
+            2. TODO: update particle velocities due to gravity.
+            3. TODO: for each particle update grid velocity (particle -> grid).
+            4. TODO: for each particle do pressure projection.
+            5. TODO: for each particle update particle velocity from grid (grid -> particle).
+        */
 
-        /* TODO: for each particle update grid velocity (particle -> grid) */
-        /* TODO: for each particle do pressure projection */
-        /* TODO: for each particle update particle velocity from grid (grid -> particle) */
         t += dt;
     }
 }

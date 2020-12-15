@@ -23,8 +23,8 @@ namespace Eigen {
             for (size_t i = 0; i < x; i++)
             {
                 data.push_back(Eigen::MatrixXd(y,z));
-            }
-            
+                data[i].setZero();
+            }            
         };
     };
 

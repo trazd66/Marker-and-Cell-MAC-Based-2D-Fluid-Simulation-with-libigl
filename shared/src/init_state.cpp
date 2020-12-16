@@ -45,7 +45,7 @@ void init_state_2d(const int bb_size_x, const int bb_size_y,
         const int boundary_x = (int)(bb_size_x * grid_interval + 1);
         const int boundary_y = (int)(bb_size_y * grid_interval + 1);
 
-        M_particles(i, 0) = rand() % boundary_x;
-        M_particles(i, 1) = rand() % boundary_y;
+        M_particles(i, 0) = (double)(rand() % boundary_x);
+        M_particles(i, 1) = (double)(rand() % boundary_y);
     }
 }

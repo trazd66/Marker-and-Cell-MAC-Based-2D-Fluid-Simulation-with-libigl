@@ -10,12 +10,13 @@
 
 #include <init_state.h>
 #include <particle_to_grid.h>
-#include <gradient_pressure.h>
 #include <pressure_matrix_solve.h>
 #include <PIC.h>
 
 //Simulation State
 bool simulating = true;
+bool is2d = true;
+
 
 double t = 0;      //simulation time
 double dt = 0.005; //time step
@@ -31,6 +32,7 @@ Eigen::VectorXd M_particles_v; // particle velocity v
 Eigen::MatrixXd M_u; // M_u a 2D matrix that contains the x velociies of the grid
 Eigen::MatrixXd M_v; // M_v a 2D matrix that contains the y velociies of the grid
 Eigen::MatrixXd M_pressures; // Grid pressure matrix
+Eigen::MatrixXd M_signed_distance; //Signed_distance matrix
 
 void simulate()
 {
@@ -50,6 +52,7 @@ void simulate()
        }
 
         t += dt;
+
     }
 }
 
@@ -58,14 +61,15 @@ bool draw(igl::opengl::glfw::Viewer &viewer)
     Eigen::MatrixXd particle_colors(num_particles, 3);
     particle_colors.setOnes();
     viewer.data().set_points(M_particles / 100.0, particle_colors);
-
     return false;
 }
 
 int main(int argc, char **argv)
 {
     // initial setup
-    init_state_2d(bb_size_x, bb_size_y, grid_interval, num_particles, M_particles, M_u, M_v, M_particles_u, M_particles_v, M_pressures);
+    init_state_2d(bb_size_x, bb_size_y, grid_interval, num_particles, 
+    M_particles, M_signed_distance, 
+    M_u, M_v, M_particles_u, M_particles_v, M_pressures);
 
     //run simulation in seperate thread to avoid slowing down the UI
     std::thread simulation_thread(simulate);

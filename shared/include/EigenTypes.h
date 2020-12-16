@@ -8,9 +8,12 @@ namespace Eigen {
 
     //dense types
     using Vector6d = Eigen::Matrix<double, 6,1>;
+    using Matrix15d = Eigen::Matrix<double,1,5>;
+    using Matrix14d = Eigen::Matrix<double,1,4>;
     using Matrix36d = Eigen::Matrix<double, 3,6>;
     using Matrix66d  = Eigen::Matrix<double, 6,6>;
     using Matrix44f = Eigen::Matrix<float, 4,4>;
+    using Matrix45d = Eigen::Matrix<double,4,5>;
     //sparse types
     using SparseMatrixd = Eigen::SparseMatrix<double>;
 

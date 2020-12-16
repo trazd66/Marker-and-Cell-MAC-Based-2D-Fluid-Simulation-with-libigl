@@ -6,26 +6,34 @@ void assemble_pressure_f_2d(double rho, double dx, double dy, double dt,
                             Eigen::MatrixXd &M_signed_distance,Eigen::MatrixXd &M_particles,
                             Eigen::VectorXd &f){
                             assert(dx ==  dy && "x interval should equal to y interval.");
-                            
-                            f = Eigen::VectorXd((M_u.rows() - 1)*(M_v.cols() - 1));
+                            int x_len = M_u.cols();
+                            int y_len = M_v.rows();
+                            int x_len_non_staggered = x_len - 1;
+                            int y_len_non_staggered = y_len - 1;
+
+                            f = Eigen::VectorXd(M_signed_distance.size());
                             Eigen::Matrix14d B;
                             B << -1, 1, -1, 1;      
                             Eigen::DiagonalMatrix<double,4> P_TP;
-                            for (int i = 1; i < M_u.rows(); i++)
+                            for (int i = 1; i < x_len_non_staggered; i++)
                             {
-                                for (int j = 1; j < M_v.cols(); j++)
+                                int i_non_staggered = i - 1;
+                                for (int j = 1; j < y_len_non_staggered; j++)
                                 {
-                                    if (M_signed_distance(i - 1,j) > 0)
+                                    int j_non_staggered = j - 1;
+                                    int idx = i_non_staggered + j_non_staggered * y_len_non_staggered;//col-wise flattening
+
+                                    if (M_signed_distance(j_non_staggered,i - 1) > 0)
                                         P_TP.diagonal()[0] = 0;
-                                    if (M_signed_distance(i + 1,j) > 0)
+                                    if (M_signed_distance(j_non_staggered,i + 1) > 0)
                                         P_TP.diagonal()[1] = 0;
-                                    if (M_signed_distance(i,j - 1) > 0)
+                                    if (M_signed_distance(j - 1,i_non_staggered) > 0)
                                         P_TP.diagonal()[2] = 0;
-                                    if (M_signed_distance(i,j + 1) > 0)
+                                    if (M_signed_distance(j + 1,i_non_staggered) > 0)
                                         P_TP.diagonal()[3] = 0;
                                     Eigen::Vector4d q_j;
-                                    q_j << M_u(i,j) , M_u(i + 1,j), M_v(i,j), M_v(i,j+1);
-                                    f(i*M_particles.rows()+j) = B *P_TP* q_j;
+                                    q_j << M_u(j_non_staggered,i) , M_u(j_non_staggered,i + 1), M_v(j,i_non_staggered), M_v(j+1,i_non_staggered);
+                                    f(idx) = B *P_TP* q_j;
                                 }
                             }
 

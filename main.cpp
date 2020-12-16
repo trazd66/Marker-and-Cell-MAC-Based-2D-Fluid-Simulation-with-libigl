@@ -73,7 +73,7 @@ void simulate()
         assemble_pressure_A_2d(M_u, M_v, M_particles, M_signed_distance, A);
         assemble_pressure_f_2d(rho, grid_interval, grid_interval, dt, M_u, M_v, M_signed_distance, M_particles, f);
         grid_pressure_gradient_update_2d(M_u, M_v, M_particles, M_signed_distance, A, f, rho, dt, grid_interval);
-
+        std::cout <<M_u << '\n';
         // 5.
         for (int i = 0; i < num_particles; i++) {
             Eigen::Vector2d particle_pos;

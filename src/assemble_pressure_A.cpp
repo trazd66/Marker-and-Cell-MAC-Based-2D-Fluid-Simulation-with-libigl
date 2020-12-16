@@ -5,7 +5,7 @@ void assemble_pressure_A_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v,
                             Eigen::MatrixXd &M_signed_distance,
                             Eigen::SparseMatrixd &A){
 
-            A = Eigen::SparseMatrixd(M_particles.size(),M_particles.size());                            
+            A = Eigen::SparseMatrixd(M_u.rows() - 1,M_v.cols() - 1);                            
             std::vector<Eigen::Triplet<double>> A_triplets;
 
             int row_len = M_particles.rows();

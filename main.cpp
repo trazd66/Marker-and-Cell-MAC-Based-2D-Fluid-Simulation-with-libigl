@@ -55,6 +55,9 @@ void simulate()
 
 bool draw(igl::opengl::glfw::Viewer &viewer)
 {
+    Eigen::MatrixXd particle_colors(num_particles, 3);
+    particle_colors.setOnes();
+    viewer.data().set_points(M_particles / 100.0, particle_colors);
 
     return false;
 }

@@ -7,8 +7,7 @@ void assemble_pressure_f_2d(double rho, double dx, double dy, double dt,
                             Eigen::VectorXd &f){
                             assert(dx ==  dy && "x interval should equal to y interval.");
                             
-                            f = Eigen::VectorXd(M_particles.size());
-                            //TODO: Implement B * q_j for the flattened grid
+                            f = Eigen::VectorXd((M_u.rows() - 1)*(M_v.cols() - 1));
                             Eigen::Matrix14d B;
                             B << -1, 1, -1, 1;      
                             Eigen::DiagonalMatrix<double,4> P_TP;

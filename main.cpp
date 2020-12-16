@@ -12,12 +12,15 @@
 #include <particle_to_grid.h>
 #include <pressure_matrix_solve.h>
 #include <PIC.h>
+#include <assemble_pressure_A.h>
+#include <assemble_pressure_f.h>
+#include <grid_pressure_gradient_update.h>
 
 //Simulation State
 bool simulating = true;
 bool is2d = true;
 
-
+double rho = 1.0; // density of water
 double t = 0;      //simulation time
 double dt = 0.005; //time step
 Eigen::Vector2d g(0., -9.8); // gravity acceleration
@@ -42,14 +45,49 @@ void simulate()
         /*
             1. Advection natively satisfied because no acceleration involved during movement of particles.
             2. update particle velocities due to gravity.
-            3. TODO: for each particle update grid velocity (particle -> grid).
-            4. TODO: for each particle do pressure projection.
-            5. TODO: for each particle update particle velocity from grid (grid -> particle).
+            3. for each particle update grid velocity (particle -> grid).
+            4. for each particle do pressure projection.
+            5. for each particle update particle velocity from grid (grid -> particle).
         */
 
-       for(int i = 0; i < M_particles.rows(); i++) {
-           M_particles_v(i) += g(1) * dt;
+       // 2.
+       Eigen::VectorXd g_acc_vector(num_particles);
+       g_acc_vector.setOnes();
+       M_particles_v += g_acc_vector * g(1) * dt;
+
+       for (int i = 0; i < num_particles; i++) {
+           // 3.
+           Eigen::Vector2d particle_pos;
+
+           particle_pos = M_particles.row(i).transpose();
+           double u_particle = M_particles_u(i);
+           double v_particle = M_particles_v(i);
+
+           v_particle_onto_grid_v(M_v, particle_pos, v_particle, grid_interval, grid_interval);
+           u_particle_onto_grid_u(M_u, particle_pos, u_particle, grid_interval, grid_interval);
        }
+
+        // 4.
+        Eigen::SparseMatrixd A;
+        Eigen::VectorXd f;
+        assemble_pressure_A_2d(M_u, M_v, M_particles, M_signed_distance, A);
+        assemble_pressure_f_2d(rho, grid_interval, grid_interval, dt, M_u, M_v, M_signed_distance, M_particles, f);
+        grid_pressure_gradient_update_2d(M_u, M_v, M_particles, M_signed_distance, A, f, rho, dt, grid_interval);
+
+        // 5.
+        for (int i = 0; i < num_particles; i++) {
+            Eigen::Vector2d particle_pos;
+
+            particle_pos = M_particles.row(i).transpose();
+            double u_particle = M_particles_u(i);
+            double v_particle = M_particles_v(i);
+
+            double new_u = grid_to_particle_PIC_u (M_u, particle_pos, grid_interval, grid_interval);
+            double new_v = grid_to_particle_PIC_v (M_v, particle_pos, grid_interval, grid_interval);
+
+            M_particles_u(i) = new_u;
+            M_particles_v(i) = new_v;
+        }
 
         t += dt;
 

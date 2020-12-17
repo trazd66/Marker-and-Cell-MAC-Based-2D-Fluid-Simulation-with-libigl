@@ -1,4 +1,5 @@
 #include <assemble_pressure_A.h>
+#include <utilities.h>
 
 void assemble_pressure_A_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v, 
                             Eigen::MatrixXd &M_particles, 
@@ -13,34 +14,41 @@ void assemble_pressure_A_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v,
             A = Eigen::SparseMatrixd(M_signed_distance.size(),M_signed_distance.size());//non-staggered                            
             std::vector<Eigen::Triplet<double>> A_triplets;
 
-
-
-
             //note that although in Eigen::Matrix form, M(i,j) is i th row, j th column
             //but in the paper, M(i,j) is i th column, j th row, which we will use here 
-            for (int i = 1; i < x_len_non_staggered; i++)
+            for (int x = 1; x < x_len_non_staggered; x++)
             {
-                int i_non_staggered = i - 1;
-                for (int j = 1; j < y_len_non_staggered; j++)
+                int x_non_staggered = x - 1;
+                for (int y = 1; y < y_len_non_staggered; y++)
                 {
                     double num_fluid_cells = 0.;
-                    int j_non_staggered = j - 1;
-                    int idx = i_non_staggered + j_non_staggered * y_len_non_staggered;//col-wise flattening
+                    int y_non_staggered = y - 1;
+                    int i_idx,j_idx;
+                    get_matrix_index_2d(x_non_staggered,y_non_staggered,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
+                    int idx = i_idx * x_len_non_staggered + j_idx;
 
-                    if(M_signed_distance(j-1,i_non_staggered) < 0){//top, saved at i th row and j -1 th col in Eigen
-                        A_triplets.push_back(Eigen::Triplet<double>(idx,idx - y_len_non_staggered,-1.)); 
+
+                    get_matrix_index_2d(x_non_staggered,y+1,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
+                    if(M_signed_distance(i_idx,j_idx) < 0){//top
+                        A_triplets.push_back(Eigen::Triplet<double>(idx,i_idx * x_len_non_staggered + j_idx,-1.)); 
                         num_fluid_cells++;
                     }
-                    if(M_signed_distance(j+1,i_non_staggered) < 0){//bottom
-                        A_triplets.push_back(Eigen::Triplet<double>(idx,idx + y_len_non_staggered,-1.)); 
+
+                    get_matrix_index_2d(x_non_staggered,y-1,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
+                    if(M_signed_distance(i_idx,j_idx) < 0){//bottom
+                        A_triplets.push_back(Eigen::Triplet<double>(idx,i_idx * x_len_non_staggered + j_idx,-1.)); 
                         num_fluid_cells++;
                     }
-                    if(M_signed_distance(j_non_staggered,i-1) < 0){//right
-                        A_triplets.push_back(Eigen::Triplet<double>(idx,idx - 1,-1.)); 
+
+                    get_matrix_index_2d(x+1,y_non_staggered,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
+                    if(M_signed_distance(i_idx,j_idx) < 0){//right
+                        A_triplets.push_back(Eigen::Triplet<double>(idx,i_idx * x_len_non_staggered + j_idx,-1.)); 
                         num_fluid_cells++;
                     }
-                    if(M_signed_distance(j_non_staggered,i+1) < 0){//left
-                        A_triplets.push_back(Eigen::Triplet<double>(idx,idx + 1,-1.)); 
+
+                    get_matrix_index_2d(x-1,y_non_staggered,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
+                    if(M_signed_distance(i_idx,j_idx) < 0){//left
+                        A_triplets.push_back(Eigen::Triplet<double>(idx,i_idx * x_len_non_staggered + j_idx,-1.)); 
                         num_fluid_cells++;
                     }
 

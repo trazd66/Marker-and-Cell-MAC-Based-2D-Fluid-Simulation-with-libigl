@@ -65,8 +65,8 @@ void simulate()
            particle_pos = M_particles.row(i).transpose();
            double u_particle = M_particles_u[i];
            double v_particle = M_particles_v[i];
-           v_particle_onto_grid_v(M_v, particle_pos, v_particle, grid_interval, grid_interval);
-           u_particle_onto_grid_u(M_u, particle_pos, u_particle, grid_interval, grid_interval);
+           v_particle_onto_grid_v(M_v, particle_pos, v_particle, grid_interval, grid_interval, bb_size_x, bb_size_y);
+           u_particle_onto_grid_u(M_u, particle_pos, u_particle, grid_interval, grid_interval, bb_size_x, bb_size_y);
        }
        std::cout <<"particle_grid_complete"<<'\n';
         // 4.
@@ -87,8 +87,8 @@ void simulate()
             double u_particle = M_particles_u[i];
             double v_particle = M_particles_v[i];
 
-            double new_u = grid_to_particle_PIC_u (M_u, particle_pos, grid_interval, grid_interval);
-            double new_v = grid_to_particle_PIC_v (M_v, particle_pos, grid_interval, grid_interval);
+            double new_u = grid_to_particle_PIC_u (M_u, particle_pos, grid_interval, grid_interval, bb_size_x, bb_size_y);
+            double new_v = grid_to_particle_PIC_v (M_v, particle_pos, grid_interval, grid_interval, bb_size_x, bb_size_y);
 
             M_particles_u[i] = new_u;
             M_particles_v[i] = new_v;

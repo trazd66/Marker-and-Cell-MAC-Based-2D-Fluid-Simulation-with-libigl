@@ -10,4 +10,4 @@
     Solves pressure from Ap = f using Conjugate Gradient Method.
     EFFECT: updates pressure p
 */
-void solve_pressure_p (Eigen::VectorXd &p, Eigen::MatrixXd A, Eigen::VectorXd f);
+void solve_pressure_p (Eigen::VectorXd &p, Eigen::SparseMatrixd &A, Eigen::VectorXd &f);

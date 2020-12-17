@@ -58,7 +58,6 @@ void simulate()
        Eigen::VectorXd g_acc_vector(num_particles);
        g_acc_vector.setOnes();
        M_particles_v += g_acc_vector * g[1] * dt;
-       std::cout << g(1) << '\n';
        for (int i = 0; i < num_particles; i++) {
            // 3.
            Eigen::Vector2d particle_pos;

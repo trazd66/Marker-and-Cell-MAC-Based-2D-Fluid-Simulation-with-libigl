@@ -12,19 +12,30 @@ double grid_to_particle_PIC_u (Eigen::MatrixXd &M_u, Eigen::Vector2d &pos_partic
     double particle_x = pos_particle[0];
     double particle_y = pos_particle[1];
     int grid_x_start = (int)(particle_x / interval_x);
-    int grid_y_start = (int)(particle_y / interval_y);
+    int grid_y_start = (int)((particle_y - 0.5 * interval_y) / interval_y);
     int grid_x_end = grid_x_start + 1;
     int grid_y_end = grid_y_start + 1;
 
-    get_matrix_index_2d(grid_x_start, grid_y_start, len_x, len_y, grid_x_start, grid_y_start);
-    get_matrix_index_2d(grid_x_start, grid_y_end, len_x, len_y, grid_x_start, grid_y_end);
-    get_matrix_index_2d(grid_x_end, grid_y_start, len_x, len_y, grid_x_end, grid_y_start);
-    get_matrix_index_2d(grid_x_end, grid_y_end, len_x, len_y, grid_x_end, grid_y_end);
+    std::cout << "*** PIC_u -> " << grid_x_start << "->" << grid_x_end
+                << " " << grid_y_start << "->" << grid_y_end
+                << " len_x: " << len_x << " len_y: " << len_y <<'\n';
+    int i_idx, j_idx;
+    get_matrix_index_2d(grid_x_start, grid_y_start, len_x+1, len_y, i_idx, j_idx);
+    std::cout << "*** PIC_u -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
+    double x_start_y_start = (1 / (interval_x * interval_y)) * (grid_x_end * interval_x - particle_x) * (grid_y_end * interval_y - particle_y) * M_u(i_idx, j_idx);
 
-    double x_start_y_start = (1 / (interval_x * interval_y)) * (grid_x_end * interval_x - particle_x) * (grid_y_end * interval_y - particle_y) * M_u(grid_y_start, grid_x_start);
-    double x_start_y_end = (1 / (interval_x * interval_y)) * (grid_x_end * interval_x - particle_x) * (particle_y - grid_y_start * interval_y) * M_u(grid_y_start, grid_x_end);
-    double x_end_y_start = (1 / (interval_x * interval_y)) * (particle_x - grid_x_start * interval_x) * (grid_y_end * interval_y - particle_y) * M_u(grid_y_end, grid_x_start);
-    double x_end_y_end = (1 / (interval_x * interval_y)) * (particle_x - grid_x_start * interval_x) * (particle_y - grid_y_start * interval_y) * M_u(grid_y_end, grid_x_end);
+    get_matrix_index_2d(grid_x_start, grid_y_end, len_x+1, len_y, i_idx, j_idx);
+    std::cout << "*** PIC_u -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
+    double x_start_y_end = (1 / (interval_x * interval_y)) * (grid_x_end * interval_x - particle_x) * (particle_y - grid_y_start * interval_y) * M_u(i_idx, j_idx);
+
+    get_matrix_index_2d(grid_x_end, grid_y_start, len_x+1, len_y, i_idx, j_idx);
+    std::cout << "*** PIC_u -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
+    double x_end_y_start = (1 / (interval_x * interval_y)) * (particle_x - grid_x_start * interval_x) * (grid_y_end * interval_y - particle_y) * M_u(i_idx, j_idx);
+
+    get_matrix_index_2d(grid_x_end, grid_y_end, len_x+1, len_y, i_idx, j_idx);
+    std::cout << "*** PIC_u -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
+    double x_end_y_end = (1 / (interval_x * interval_y)) * (particle_x - grid_x_start * interval_x) * (particle_y - grid_y_start * interval_y) * M_u(i_idx, j_idx);
+
     double result = x_start_y_start + x_start_y_end + x_end_y_start + x_end_y_end;
 
     return result;
@@ -40,20 +51,31 @@ double grid_to_particle_PIC_v (Eigen::MatrixXd &M_v, Eigen::Vector2d &pos_partic
     /* pos_particle -> (x,y) */
     double particle_x = pos_particle[0];
     double particle_y = pos_particle[1];
-    int grid_x_start = (int)(particle_x / interval_x);
+    int grid_x_start = (int)((particle_x - 0.5 * interval_x) / interval_x);
     int grid_y_start = (int)(particle_y / interval_y);
     int grid_x_end = grid_x_start + 1;
     int grid_y_end = grid_y_start + 1;
 
-    get_matrix_index_2d(grid_x_start, grid_y_start, len_x, len_y, grid_x_start, grid_y_start);
-    get_matrix_index_2d(grid_x_start, grid_y_end, len_x, len_y, grid_x_start, grid_y_end);
-    get_matrix_index_2d(grid_x_end, grid_y_start, len_x, len_y, grid_x_end, grid_y_start);
-    get_matrix_index_2d(grid_x_end, grid_y_end, len_x, len_y, grid_x_end, grid_y_end);
+    std::cout << "*** PIC_v -> " << grid_x_start << "->" << grid_x_end
+                << " " << grid_y_start << "->" << grid_y_end
+                << " len_x: " << len_x << " len_y: " << len_y <<'\n';
+    int i_idx, j_idx;
+    get_matrix_index_2d(grid_x_start, grid_y_start, len_x, len_y+1, i_idx, j_idx);
+    std::cout << "*** PIC_v -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
+    double x_start_y_start = (1 / (interval_x * interval_y)) * (grid_x_end * interval_x - particle_x) * (grid_y_end * interval_y - particle_y) * M_v(i_idx, j_idx);
 
-    double x_start_y_start = (1 / (interval_x * interval_y)) * (grid_x_end * interval_x - particle_x) * (grid_y_end * interval_y - particle_y) * M_v(grid_y_start, grid_x_start);
-    double x_start_y_end = (1 / (interval_x * interval_y)) * (grid_x_end * interval_x - particle_x) * (particle_y - grid_y_start * interval_y) * M_v(grid_y_start, grid_x_end);
-    double x_end_y_start = (1 / (interval_x * interval_y)) * (particle_x - grid_x_start * interval_x) * (grid_y_end * interval_y - particle_y) * M_v(grid_y_end, grid_x_start);
-    double x_end_y_end = (1 / (interval_x * interval_y)) * (particle_x - grid_x_start * interval_x) * (particle_y - grid_y_start * interval_y) * M_v(grid_y_end, grid_x_end);
+    get_matrix_index_2d(grid_x_start, grid_y_end, len_x, len_y+1, i_idx, j_idx);
+    std::cout << "*** PIC_v -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
+    double x_start_y_end = (1 / (interval_x * interval_y)) * (grid_x_end * interval_x - particle_x) * (particle_y - grid_y_start * interval_y) * M_v(i_idx, j_idx);
+
+    get_matrix_index_2d(grid_x_end, grid_y_start, len_x, len_y+1, i_idx, j_idx);
+    std::cout << "*** PIC_v -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
+    double x_end_y_start = (1 / (interval_x * interval_y)) * (particle_x - grid_x_start * interval_x) * (grid_y_end * interval_y - particle_y) * M_v(i_idx, j_idx);
+
+    get_matrix_index_2d(grid_x_end, grid_y_end, len_x, len_y+1, i_idx, j_idx);
+    std::cout << "*** PIC_v -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
+    double x_end_y_end = (1 / (interval_x * interval_y)) * (particle_x - grid_x_start * interval_x) * (particle_y - grid_y_start * interval_y) * M_v(i_idx, j_idx);
+
     double result = x_start_y_start + x_start_y_end + x_end_y_start + x_end_y_end;
 
     return result;

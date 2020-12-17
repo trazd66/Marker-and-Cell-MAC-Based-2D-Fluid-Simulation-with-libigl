@@ -13,7 +13,7 @@ void v_particle_onto_grid_v(Eigen::MatrixXd &M_v, Eigen::Vector2d &pos_particle,
     /* pos_particle -> (x,y) */
     double particle_x = pos_particle[0];
     double particle_y = pos_particle[1];
-    int grid_x_start = (int)(particle_x / interval_x);
+    int grid_x_start = (int)((particle_x - 0.5 * interval_x) / interval_x);
     int grid_y_start = (int)(particle_y / interval_y);
     int grid_x_end = grid_x_start + 1;
     int grid_y_end = grid_y_start + 1;
@@ -39,7 +39,7 @@ void u_particle_onto_grid_u(Eigen::MatrixXd &M_u, Eigen::Vector2d &pos_particle,
     double particle_x = pos_particle[0];
     double particle_y = pos_particle[1];
     int grid_x_start = (int)(particle_x / interval_x);
-    int grid_y_start = (int)(particle_y / interval_y);
+    int grid_y_start = (int)((particle_y - 0.5 * interval_y) / interval_y);
     int grid_x_end = grid_x_start + 1;
     int grid_y_end = grid_y_start + 1;
 

@@ -1,7 +1,7 @@
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 #include <EigenTypes.h>
-
+#include <iostream>
 /***
  * 
  * transates the x,y position from the paper into eigen indexes

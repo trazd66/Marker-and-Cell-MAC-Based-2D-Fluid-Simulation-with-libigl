@@ -19,17 +19,19 @@ void init_state_3d(const int bb_size_x, const int bb_size_y, const int bb_size_z
     M_w.init_tensor(bb_size_x, bb_size_y, bb_size_z + 1);
 }
 
-void init_state_2d(const int bb_size_x, const int bb_size_y,
-                   const double grid_interval, const int num_particles,
-                   Eigen::MatrixXd &M_particles, Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v,
-                   Eigen::MatrixXd &M_signed_distance,
-                   Eigen::VectorXd &M_particles_u, Eigen::VectorXd &M_particles_v, Eigen::MatrixXd &M_pressures)
+void init_state_2d(const int bb_size_x,const int bb_size_y, 
+                const double grid_interval, const int num_particles, 
+                Eigen::MatrixXd &M_particles,
+                Eigen::MatrixXd &M_signed_distance,
+                Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v, 
+                Eigen::VectorXd &M_particles_u, Eigen::VectorXd &M_particles_v, 
+                Eigen::MatrixXd &M_pressures)
 {
     M_particles = Eigen::MatrixXd(num_particles, 2);
     M_particles_u = Eigen::VectorXd(num_particles);
     M_particles_v = Eigen::VectorXd(num_particles);
 
-    M_pressures = Eigen::MatrixXd(bb_size_x+1, bb_size_y+1);
+    M_pressures = Eigen::MatrixXd(bb_size_y,bb_size_x);
     M_u = Eigen::MatrixXd(bb_size_y,bb_size_x + 1);
     M_v = Eigen::MatrixXd(bb_size_y + 1,bb_size_x);
 
@@ -53,7 +55,7 @@ void init_state_2d(const int bb_size_x, const int bb_size_y,
 
     //calculating initial signed distance matrix
     //set to -1 for now
-    M_signed_distance = Eigen::MatrixXd(bb_size_x+1,bb_size_y+1);
+    M_signed_distance = Eigen::MatrixXd(bb_size_y + 1,bb_size_x + 1);
     M_signed_distance.setOnes();
     M_signed_distance *= -1;//everything is inside surface
     //except the boundaries, they should be outside of our surface at all times

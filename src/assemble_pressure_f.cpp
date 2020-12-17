@@ -12,9 +12,9 @@ void assemble_pressure_f_2d(double rho, double dx, double dy, double dt,
             int y_len_non_staggered = y_len - 1;
 
             f = Eigen::VectorXd(M_signed_distance.size());
+            f.setZero();
             Eigen::Matrix14d B;
             B << -1, 1, -1, 1;      
-            Eigen::DiagonalMatrix<double,4> P_TP;
             for (int x = 1; x < x_len_non_staggered; x++)
             {
                 int x_non_staggered = x - 1;
@@ -23,32 +23,34 @@ void assemble_pressure_f_2d(double rho, double dx, double dy, double dt,
                     double num_fluid_cells = 0.;
                     int y_non_staggered = y - 1;
                     int i_idx,j_idx;
+                    
+                    
                     get_matrix_index_2d(x_non_staggered,y_non_staggered,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
                     int idx = i_idx * x_len_non_staggered + j_idx;
                     Eigen::Vector4d q_j;
                     q_j.setZero();
 
-                    get_matrix_index_2d(x_non_staggered,y-1,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
+                    get_matrix_index_2d(x_non_staggered,y-1,x_len_non_staggered,y_len,i_idx,j_idx);
                     if(M_signed_distance(i_idx,j_idx) < 0){//bottom
                         q_j[0] = M_v(i_idx,j_idx);
                     }
 
-                    get_matrix_index_2d(x_non_staggered,y+1,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
+                    get_matrix_index_2d(x_non_staggered,y+1,x_len_non_staggered,y_len,i_idx,j_idx);
                     if(M_signed_distance(i_idx,j_idx) < 0){//top
                         q_j[1] = M_v(i_idx,j_idx);
                     }
 
-                    get_matrix_index_2d(x+1,y_non_staggered,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
+                    get_matrix_index_2d(x+1,y_non_staggered,x_len,y_len_non_staggered,i_idx,j_idx);
                     if(M_signed_distance(i_idx,j_idx) < 0){//right
                         q_j[2] = M_u(i_idx,j_idx);
                     }
 
-                    get_matrix_index_2d(x-1,y_non_staggered,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
+                    get_matrix_index_2d(x-1,y_non_staggered,x_len,y_len_non_staggered,i_idx,j_idx);
                     if(M_signed_distance(i_idx,j_idx) < 0){//left
                         q_j[3] = M_u(i_idx,j_idx);
                     }
                     
-                    f(idx) = B * q_j;
+                    f[idx] = B * q_j;
                 }
             }
 

@@ -54,11 +54,11 @@ void simulate()
             5. for each particle update particle velocity from grid (grid -> particle).
         */
 
-       // 2.
-       Eigen::VectorXd g_acc_vector(num_particles);
-       g_acc_vector.setOnes();
-       M_particles_v += g_acc_vector * g[1] * dt;
-       for (int i = 0; i < num_particles; i++) {
+        // 2.
+        Eigen::VectorXd g_acc_vector(num_particles);
+        g_acc_vector.setOnes();
+        M_particles_v += g_acc_vector * g[1] * dt;
+        for (int i = 0; i < num_particles; i++) {
            // 3.
            Eigen::Vector2d particle_pos;
 
@@ -67,18 +67,18 @@ void simulate()
            double v_particle = M_particles_v[i];
            v_particle_onto_grid_v(M_v, particle_pos, v_particle, grid_interval, grid_interval, bb_size_x, bb_size_y);
            u_particle_onto_grid_u(M_u, particle_pos, u_particle, grid_interval, grid_interval, bb_size_x, bb_size_y);
-       }
-       std::cout <<"particle_grid_complete"<<'\n';
+        }
+        std::cout <<"particle_grid_complete"<<'\n';
         // 4.
         Eigen::SparseMatrixd A;
         Eigen::VectorXd f;
         assemble_pressure_A_2d(M_u, M_v, M_particles, M_signed_distance, A);
-       std::cout <<"A_complete"<<'\n';
+        std::cout <<"A_complete"<<'\n';
 
         assemble_pressure_f_2d(rho, grid_interval, grid_interval, dt, M_u, M_v, M_signed_distance, M_particles, f);
-       std::cout <<"f_complete"<<'\n';
+        std::cout <<"f_complete"<<'\n';
         grid_pressure_gradient_update_2d(M_u, M_v, M_particles, M_signed_distance, A, f, rho, dt, grid_interval);
-       std::cout <<"pressure_complete"<<'\n';
+        std::cout <<"pressure_complete"<<'\n';
         // 5.
         for (int i = 0; i < num_particles; i++) {
             Eigen::Vector2d particle_pos;
@@ -112,9 +112,13 @@ bool draw(igl::opengl::glfw::Viewer &viewer)
 int main(int argc, char **argv)
 {
     // initial setup
-    init_state_2d(bb_size_x, bb_size_y, grid_interval, num_particles, 
-    M_particles, M_signed_distance, 
-    M_u, M_v, M_particles_u, M_particles_v, M_pressures);
+    init_state_2d(bb_size_x,bb_size_y, 
+                grid_interval,num_particles, 
+                M_particles,
+                M_signed_distance,
+                M_u, M_v, 
+                M_particles_u, M_particles_v, 
+                M_pressures);
 
     //run simulation in seperate thread to avoid slowing down the UI
     std::thread simulation_thread(simulate);

@@ -21,9 +21,6 @@ void grid_pressure_gradient_update_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v
     int x_len_non_staggered = x_len - 1;
     int y_len_non_staggered = y_len - 1;
 
-    int bb_size_x = M_v.rows();
-    int bb_size_y = M_u.cols();
-
     int num_grids = M_signed_distance.size();
     Eigen::SparseMatrixd D(2 * num_grids, num_grids);
     std::vector<Eigen::Triplet<double>> D_triplets;

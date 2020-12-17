@@ -16,6 +16,8 @@
 #include <assemble_pressure_f.h>
 #include <grid_pressure_gradient_update.h>
 
+int iteration_counter = 0;
+
 //Simulation State
 bool simulating = true;
 bool is2d = true;
@@ -27,7 +29,7 @@ Eigen::Vector2d g(0., -9.8); // gravity acceleration
 
 const int bb_size_x = 50; // x dimension of the bounding box -> number of grids in x axis
 const int bb_size_y = 50; // y dimension of the bounding box -> number of grids in y axis
-const double grid_interval = 5.0; // size of the grid interval, determines the number of grid cells
+const double grid_interval = 0.1; // size of the grid interval, determines the number of grid cells
 const int num_particles = 1000; // number of particles
 Eigen::MatrixXd M_particles; // the particle matrix
 Eigen::VectorXd M_particles_u; // particle velocity u
@@ -42,6 +44,8 @@ void simulate()
 
     while (simulating)
     {
+        std::cout << "iteration " << iteration_counter++ << std::endl;
+
         /*
             1. Advection natively satisfied because no acceleration involved during movement of particles.
             2. update particle velocities due to gravity.
@@ -99,7 +103,7 @@ bool draw(igl::opengl::glfw::Viewer &viewer)
 {
     Eigen::MatrixXd particle_colors(num_particles, 3);
     particle_colors.setOnes();
-    viewer.data().set_points(M_particles / 100.0, particle_colors);
+    viewer.data().set_points(M_particles, particle_colors);
     return false;
 }
 

@@ -27,7 +27,7 @@ Eigen::Vector2d g(0., -9.8); // gravity acceleration
 
 const int bb_size_x = 50; // x dimension of the bounding box -> number of grids in x axis
 const int bb_size_y = 50; // y dimension of the bounding box -> number of grids in y axis
-const int grid_interval = 5.0; // size of the grid interval, determines the number of grid cells
+const double grid_interval = 5.0; // size of the grid interval, determines the number of grid cells
 const int num_particles = 1000; // number of particles
 Eigen::MatrixXd M_particles; // the particle matrix
 Eigen::VectorXd M_particles_u; // particle velocity u
@@ -73,7 +73,6 @@ void simulate()
         assemble_pressure_A_2d(M_u, M_v, M_particles, M_signed_distance, A);
         assemble_pressure_f_2d(rho, grid_interval, grid_interval, dt, M_u, M_v, M_signed_distance, M_particles, f);
         grid_pressure_gradient_update_2d(M_u, M_v, M_particles, M_signed_distance, A, f, rho, dt, grid_interval);
-        std::cout <<M_u << '\n';
         // 5.
         for (int i = 0; i < num_particles; i++) {
             Eigen::Vector2d particle_pos;
@@ -87,6 +86,8 @@ void simulate()
 
             M_particles_u(i) = new_u;
             M_particles_v(i) = new_v;
+            M_particles(i, 0) += new_u *dt;
+            M_particles(i, 1) += new_v *dt;
         }
 
         t += dt;

@@ -27,20 +27,20 @@ void assemble_pressure_A_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v,
                     int j_non_staggered = j - 1;
                     int idx = i_non_staggered + j_non_staggered * y_len_non_staggered;//col-wise flattening
 
-                    if(M_signed_distance(j+1,i_non_staggered) < 0){//top
+                    if(M_signed_distance(j-1,i_non_staggered) < 0){//top, saved at i th row and j -1 th col in Eigen
                         A_triplets.push_back(Eigen::Triplet<double>(idx,idx - y_len_non_staggered,-1.)); 
                         num_fluid_cells++;
                     }
-                    if(M_signed_distance(j-1,i_non_staggered) < 0){//bottom
+                    if(M_signed_distance(j+1,i_non_staggered) < 0){//bottom
                         A_triplets.push_back(Eigen::Triplet<double>(idx,idx + y_len_non_staggered,-1.)); 
                         num_fluid_cells++;
                     }
-                    if(M_signed_distance(j_non_staggered,i+1) < 0){//right
-                        A_triplets.push_back(Eigen::Triplet<double>(idx,idx + 1,-1.)); 
+                    if(M_signed_distance(j_non_staggered,i-1) < 0){//right
+                        A_triplets.push_back(Eigen::Triplet<double>(idx,idx - 1,-1.)); 
                         num_fluid_cells++;
                     }
-                    if(M_signed_distance(j_non_staggered,i-1) < 0){//left
-                        A_triplets.push_back(Eigen::Triplet<double>(idx,idx - 1,-1.)); 
+                    if(M_signed_distance(j_non_staggered,i+1) < 0){//left
+                        A_triplets.push_back(Eigen::Triplet<double>(idx,idx + 1,-1.)); 
                         num_fluid_cells++;
                     }
 

@@ -13,3 +13,6 @@
 void get_matrix_index_2d(const int x ,const int y, 
                                 const int len_x,const int len_y, 
                                 int &i, int &j); 
+
+
+bool on_boundary(const int x, const int len_x);

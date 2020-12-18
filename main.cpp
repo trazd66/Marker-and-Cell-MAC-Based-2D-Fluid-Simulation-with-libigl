@@ -25,7 +25,7 @@ bool is2d = true;
 double rho = 1.0; // density of water
 double t = 0;      //simulation time
 double dt = 0.005; //time step
-Eigen::Vector2d g(0., -9.8); // gravity acceleration
+Eigen::Vector2d g(0., -0.0098); // gravity acceleration
 
 const int bb_size_x = 50; // x dimension of the bounding box -> number of grids in x axis
 const int bb_size_y = 50; // y dimension of the bounding box -> number of grids in y axis
@@ -97,7 +97,6 @@ void simulate()
         }
 
         t += dt;
-
     }
 }
 

@@ -1,6 +1,6 @@
 #include <init_state.h>
 #include <stdlib.h>
-
+#include <utilities.h>
 void init_state_3d(const int bb_size_x, const int bb_size_y, const int bb_size_z,
                    const double grid_interval, const int num_particles, Eigen::MatrixXd &M_particles,
                    Eigen::MatrixXd &M_signed_distance,
@@ -59,13 +59,13 @@ void init_state_2d(const int bb_size_x,const int bb_size_y,
     M_signed_distance.setOnes();
     M_signed_distance *= -1;//everything is inside surface
     //except the boundaries, they should be outside of our surface at all times
-    for (int j = 0; j < bb_size_y; j++)
+    for (int j = 0; j < bb_size_y + 1; j++)
     {
         M_signed_distance(j,0) = 1; // y = j, x = 0
         M_signed_distance(j,bb_size_x) = 1; // y = j, x = bb_size_x
     }
 
-    for (int i = 0; i < bb_size_x; i++)
+    for (int i = 0; i < bb_size_x + 1; i++)
     {
         M_signed_distance(0,i) = 1;
         M_signed_distance(bb_size_y,i) = 1;

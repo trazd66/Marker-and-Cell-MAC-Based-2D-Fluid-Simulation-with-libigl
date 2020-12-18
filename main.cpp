@@ -47,11 +47,11 @@ void simulate()
 
     while (simulating)
     {
-        std::cout << "iteration " << iteration_counter++ << std::endl;
+        // std::cout << "iteration " << iteration_counter++ << std::endl;
 
         ///////TODO: check this////////////////////////
-        M_u.setZero();
-        M_v.setZero();
+        // M_u.setZero();
+        // M_v.setZero();
         ///////////////////////////////////////////////
 
         /*
@@ -77,17 +77,20 @@ void simulate()
            u_particle_onto_grid_u(M_u, particle_pos, u_particle, grid_interval, grid_interval, bb_size_x, bb_size_y);
         }
 
-        std::cout <<"particle_grid_complete"<<'\n';
+        // normalize grid to make sure we have a sane grid velocity
+        normalize_grid(M_u, M_v);
+        // std::cout <<"particle_grid_complete"<<'\n';
+
         // 4.
         Eigen::SparseMatrixd A;
         Eigen::VectorXd f;
         assemble_pressure_A_2d(M_u, M_v, M_particles, M_fluid, A);
-        std::cout <<"A_complete"<<'\n';
+        // std::cout <<"A_complete"<<'\n';
 
         assemble_pressure_f_2d(rho, grid_interval, grid_interval, dt, M_u, M_v, M_fluid, M_particles, f);
-        std::cout <<"f_complete"<<'\n';
+        // std::cout <<"f_complete"<<'\n';
         grid_pressure_gradient_update_2d(M_u, M_v, M_particles, M_pressure, M_fluid, A, f, rho, dt, grid_interval);
-        std::cout <<"pressure_complete"<<'\n';
+        // std::cout <<"pressure_complete"<<'\n';
         // 5.
         for (int i = 0; i < num_particles; i++) {
             Eigen::Vector2d particle_pos;
@@ -103,17 +106,20 @@ void simulate()
             M_particles_v[i] = new_v;
         }
 
+        // normalize particle velocity to make sure we have a sane particle velocity
+        // normalize_velocity(M_particles_u, M_particles_v);
         // adjust the timestep according to u and v
-        normalize_velocity(M_particles_u, M_particles_v);
-        // update_dt(dt, num_particles, grid_interval, M_particles_u, M_particles_v);
+        update_dt(dt, num_particles, grid_interval, M_particles_u, M_particles_v);
 
         // update particle positions
         M_particles.col(0) += M_particles_u * dt;
         M_particles.col(1) += M_particles_v * dt;
 
+        // clip the particle positions
+        M_particles = M_particles.cwiseMin(grid_interval * bb_size_x).cwiseMax(0);
+
         // TODO: remove this
         //////////////////////////////////////////////////
-        M_particles = M_particles.cwiseAbs();
         // std::cout << "dt -> " << dt << std::endl;
         // sleep(0.8);
         /////////////////////////////////////////////////

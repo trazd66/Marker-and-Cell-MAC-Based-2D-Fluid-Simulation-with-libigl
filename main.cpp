@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <string>
+#include <unistd.h>
 
 #include <visualization.h>
 #include <igl/edges.h>
@@ -16,6 +17,7 @@
 #include <assemble_pressure_A.h>
 #include <assemble_pressure_f.h>
 #include <grid_pressure_gradient_update.h>
+#include <utilities.h>
 
 int iteration_counter = 0;
 
@@ -46,6 +48,11 @@ void simulate()
     while (simulating)
     {
         std::cout << "iteration " << iteration_counter++ << std::endl;
+
+        ///////TODO: check this////////////////////////
+        // M_u.setZero();
+        // M_v.setZero();
+        ///////////////////////////////////////////////
 
         /*
             1. Advection natively satisfied because no acceleration involved during movement of particles.
@@ -94,9 +101,23 @@ void simulate()
 
             M_particles_u[i] = new_u;
             M_particles_v[i] = new_v;
-            M_particles(i, 0) += new_u *dt;
-            M_particles(i, 1) += new_v *dt;
         }
+
+        // adjust the timestep according to u and v
+        normalize_velocity(M_particles_u, M_particles_v);
+        update_dt(dt, num_particles, grid_interval, M_particles_u, M_particles_v);
+
+        // update particle positions
+        M_particles.col(0) += M_particles_u * dt;
+        M_particles.col(1) += M_particles_v * dt;
+
+        // TODO: remove this
+        //////////////////////////////////////////////////
+        // M_particles = M_particles.cwiseAbs();
+        // std::cout << "dt -> " << dt << std::endl;
+        sleep(1);
+        /////////////////////////////////////////////////
+
         t += dt;
     }
 }

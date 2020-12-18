@@ -18,10 +18,10 @@ void v_particle_onto_grid_v(Eigen::MatrixXd &M_v, Eigen::Vector2d &pos_particle,
     int grid_y_start = (int)(particle_y / interval_y);
     int grid_x_end = grid_x_start + 1;
     int grid_y_end = grid_y_start + 1;
-    std ::cout << particle_x << ' ' << particle_y <<std::endl;
-    std::cout << "*** v -> " << grid_x_start << "->" << grid_x_end
-                << " " << grid_y_start << "->" << grid_y_end
-                << " len_x: " << len_x << " len_y: " << len_y <<'\n';
+    // std ::cout << "particle_x: " << particle_x << " particle_y: " << particle_y <<std::endl;
+    // std::cout << "*** v -> " << grid_x_start << "->" << grid_x_end
+    //             << " " << grid_y_start << "->" << grid_y_end
+    //             << " len_x: " << len_x << " len_y: " << len_y <<'\n';
     int i_idx, j_idx;
     get_matrix_index_2d(grid_x_start, grid_y_start, len_x, len_y+1, i_idx, j_idx);
     // std::cout << "*** v -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
@@ -61,10 +61,10 @@ void u_particle_onto_grid_u(Eigen::MatrixXd &M_u, Eigen::Vector2d &pos_particle,
     int grid_y_start = (int)((particle_y - 0.5 * interval_y) / interval_y);
     int grid_x_end = grid_x_start + 1;
     int grid_y_end = grid_y_start + 1;
-    std::cout << particle_x << ' ' << particle_y << '\n';
-    std::cout << "*** u -> " << grid_x_start << "->" << grid_x_end
-                << " " << grid_y_start << "->" << grid_y_end
-                << " len_x: " << len_x << " len_y: " << len_y <<'\n';
+    // std::cout << "particle_x: " <<particle_x << " particle_y: " << particle_y << '\n';
+    // std::cout << "*** u -> " << grid_x_start << "->" << grid_x_end
+    //             << " " << grid_y_start << "->" << grid_y_end
+    //             << " len_x: " << len_x << " len_y: " << len_y <<'\n';
 
     int i_idx, j_idx;
     get_matrix_index_2d(grid_x_start, grid_y_start, len_x+1, len_y, i_idx, j_idx);

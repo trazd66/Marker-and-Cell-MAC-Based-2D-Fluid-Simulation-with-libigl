@@ -1,6 +1,8 @@
 #include <init_state.h>
 #include <stdlib.h>
 #include <utilities.h>
+#include <iostream>
+
 void init_state_3d(const int bb_size_x, const int bb_size_y, const int bb_size_z,
                    const double grid_interval, const int num_particles, Eigen::MatrixXd &M_particles,
                    Eigen::MatrixXd &M_fluid,
@@ -51,10 +53,12 @@ void init_state_2d(const int bb_size_x,const int bb_size_y,
         // const int boundary_x = (int)(bb_size_x * grid_interval + 1);
         // const int boundary_y = (int)(bb_size_y * grid_interval + 1);
 
-        M_particles(i, 0) = ((double)(rand() % 98 + 1) / 100.0) * boundary_x;
-        M_particles(i, 1) = ((double)(rand() % 98 + 1) / 100.0) * boundary_y;
+        /* 40% ~ 60% interval for initializing particles */
+        M_particles(i, 0) = ((double)(rand() % 21 + 40) / 100.0) * boundary_x;
+        M_particles(i, 1) = ((double)(rand() % 21 + 40) / 100.0) * boundary_y;
         int i_idx,j_idx;
         get_matrix_index_2d((int)M_particles(i, 0)/grid_interval,(int)M_particles(i, 1)/grid_interval,bb_size_x,bb_size_y,i_idx,j_idx);        
+        // std::cout << "init_state: i_idx -> " << i_idx << " j_idx " << j_idx << std::endl;
         M_fluid(i_idx, j_idx) = 1;
     }
 }

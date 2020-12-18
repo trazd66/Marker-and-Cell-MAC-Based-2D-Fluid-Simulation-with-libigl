@@ -29,7 +29,7 @@ void assemble_pressure_A_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v,
                     continue;
                 }
 
-                std::cout << "i idx: " << i_idx << " j idx" << j_idx << std::endl;
+                // std::cout << "i idx: " << i_idx << " j idx" << j_idx << std::endl;
                 //v_x,y+1
                 get_matrix_index_2d(x,y+1,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
                 if(!on_boundary(y+1,y_len_non_staggered)&& 

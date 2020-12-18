@@ -33,7 +33,7 @@ Eigen::Vector2d g(0., -9.8); // gravity acceleration
 const int bb_size_x = 50; // x dimension of the bounding box -> number of grids in x axis
 const int bb_size_y = 50; // y dimension of the bounding box -> number of grids in y axis
 const double grid_interval = 0.1; // size of the grid interval, determines the number of grid cells
-const int num_particles = 1; // number of particles
+const int num_particles = 10; // number of particles
 Eigen::MatrixXd M_particles; // the particle matrix
 Eigen::VectorXd M_particles_u; // particle velocity u
 Eigen::VectorXd M_particles_v; // particle velocity v
@@ -105,7 +105,7 @@ void simulate()
 
         // adjust the timestep according to u and v
         normalize_velocity(M_particles_u, M_particles_v);
-        update_dt(dt, num_particles, grid_interval, M_particles_u, M_particles_v);
+        // update_dt(dt, num_particles, grid_interval, M_particles_u, M_particles_v);
 
         // update particle positions
         M_particles.col(0) += M_particles_u * dt;
@@ -114,8 +114,8 @@ void simulate()
         // TODO: remove this
         //////////////////////////////////////////////////
         M_particles = M_particles.cwiseAbs();
-        std::cout << "dt -> " << dt << std::endl;
-        sleep(0.8);
+        // std::cout << "dt -> " << dt << std::endl;
+        // sleep(0.8);
         /////////////////////////////////////////////////
 
         t += dt;

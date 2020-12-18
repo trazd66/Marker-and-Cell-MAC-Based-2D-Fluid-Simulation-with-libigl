@@ -30,7 +30,7 @@ Eigen::Vector2d g(0., -0.0098); // gravity acceleration
 const int bb_size_x = 50; // x dimension of the bounding box -> number of grids in x axis
 const int bb_size_y = 50; // y dimension of the bounding box -> number of grids in y axis
 const double grid_interval = 5.; // size of the grid interval, determines the number of grid cells
-const int num_particles = 1000; // number of particles
+const int num_particles = 1; // number of particles
 Eigen::MatrixXd M_particles; // the particle matrix
 Eigen::VectorXd M_particles_u; // particle velocity u
 Eigen::VectorXd M_particles_v; // particle velocity v
@@ -68,6 +68,8 @@ void simulate()
            v_particle_onto_grid_v(M_v, particle_pos, v_particle, grid_interval, grid_interval, bb_size_x, bb_size_y);
            u_particle_onto_grid_u(M_u, particle_pos, u_particle, grid_interval, grid_interval, bb_size_x, bb_size_y);
         }
+        std::cout << "mu_norm: " << M_u.norm() << '\n';
+
         std::cout <<"particle_grid_complete"<<'\n';
         // 4.
         Eigen::SparseMatrixd A;
@@ -95,7 +97,7 @@ void simulate()
             M_particles(i, 0) += new_u *dt;
             M_particles(i, 1) += new_v *dt;
         }
-
+        std::cout << M_particles << '\n';
         t += dt;
     }
 }

@@ -55,6 +55,6 @@ void assemble_pressure_f_2d(double rho, double dx, double dy, double dt,
                 }
             }
 
-            f *= rho * dx / dt;
+            f *= -rho * dx / dt;
 
 }

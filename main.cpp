@@ -31,13 +31,13 @@ Eigen::Vector2d g(0., -9.8); // gravity acceleration
 const int bb_size_x = 50; // x dimension of the bounding box -> number of grids in x axis
 const int bb_size_y = 50; // y dimension of the bounding box -> number of grids in y axis
 const double grid_interval = 0.1; // size of the grid interval, determines the number of grid cells
-const int num_particles = 1; // number of particles
+const int num_particles = 100; // number of particles
 Eigen::MatrixXd M_particles; // the particle matrix
 Eigen::VectorXd M_particles_u; // particle velocity u
 Eigen::VectorXd M_particles_v; // particle velocity v
 Eigen::MatrixXd M_u; // M_u a 2D matrix that contains the x velociies of the grid
 Eigen::MatrixXd M_v; // M_v a 2D matrix that contains the y velociies of the grid
-Eigen::MatrixXd M_pressures; // Grid pressure matrix
+Eigen::MatrixXd M_pressure; // Grid pressure matrix
 Eigen::MatrixXd M_signed_distance; //Signed_distance matrix
 
 void simulate()
@@ -69,7 +69,6 @@ void simulate()
            v_particle_onto_grid_v(M_v, particle_pos, v_particle, grid_interval, grid_interval, bb_size_x, bb_size_y);
            u_particle_onto_grid_u(M_u, particle_pos, u_particle, grid_interval, grid_interval, bb_size_x, bb_size_y);
         }
-        std::cout << "mu_norm: " << M_u.norm() << '\n';
 
         std::cout <<"particle_grid_complete"<<'\n';
         // 4.
@@ -80,7 +79,7 @@ void simulate()
 
         assemble_pressure_f_2d(rho, grid_interval, grid_interval, dt, M_u, M_v, M_signed_distance, M_particles, f);
         std::cout <<"f_complete"<<'\n';
-        grid_pressure_gradient_update_2d(M_u, M_v, M_particles, M_signed_distance, A, f, rho, dt, grid_interval);
+        grid_pressure_gradient_update_2d(M_u, M_v, M_particles, M_pressure, M_signed_distance, A, f, rho, dt, grid_interval);
         std::cout <<"pressure_complete"<<'\n';
         // 5.
         for (int i = 0; i < num_particles; i++) {
@@ -98,7 +97,6 @@ void simulate()
             M_particles(i, 0) += new_u *dt;
             M_particles(i, 1) += new_v *dt;
         }
-        std::cout << M_particles << '\n';
         t += dt;
     }
 }
@@ -149,7 +147,7 @@ int main(int argc, char **argv)
                 M_signed_distance,
                 M_u, M_v, 
                 M_particles_u, M_particles_v, 
-                M_pressures);
+                M_pressure);
 
     //run simulation in seperate thread to avoid slowing down the UI
     std::thread simulation_thread(simulate);

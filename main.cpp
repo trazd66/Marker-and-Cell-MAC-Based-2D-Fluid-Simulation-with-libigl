@@ -1,5 +1,6 @@
 #include <iostream>
 #include <thread>
+#include <string>
 
 #include <visualization.h>
 #include <igl/edges.h>
@@ -107,6 +108,35 @@ bool draw(igl::opengl::glfw::Viewer &viewer)
     Eigen::MatrixXd particle_colors(num_particles, 3);
     particle_colors.setOnes();
     viewer.data().set_points(M_particles, particle_colors);
+
+    /* draw boundaries */
+    Eigen::MatrixXd points(4,2);
+    points.row(0) << 0,0;
+    points.row(1) << 0, bb_size_x * grid_interval;
+    points.row(2) << bb_size_x * grid_interval, 0;
+    points.row(3) << bb_size_x * grid_interval, bb_size_x * grid_interval;
+
+    viewer.data().add_points(points, Eigen::RowVector3d(255,0,0));
+    viewer.data().add_edges(points.row(0), points.row(1), Eigen::RowVector3d(255,0,0));
+    viewer.data().add_edges(points.row(1), points.row(3), Eigen::RowVector3d(255,0,0));
+    viewer.data().add_edges(points.row(3), points.row(2), Eigen::RowVector3d(255,0,0));
+    viewer.data().add_edges(points.row(2), points.row(0), Eigen::RowVector3d(255,0,0));
+
+    std::stringstream l1;
+    std::stringstream l2;
+    std::stringstream l3;
+    std::stringstream l4;
+    l1 << "(" << points(0,0) << ", " << points(0,1) << ")";
+    l1 << "(" << points(1,0) << ", " << points(1,1) << ")";
+    l1 << "(" << points(2,0) << ", " << points(2,1) << ")";
+    l1 << "(" << points(3,0) << ", " << points(3,1) << ")";
+    viewer.data().add_label(points.row(0), l1.str());
+    viewer.data().add_label(points.row(1), l2.str());
+    viewer.data().add_label(points.row(2), l3.str());
+    viewer.data().add_label(points.row(3), l4.str());
+
+    viewer.data().point_size = 10;
+
     return false;
 }
 

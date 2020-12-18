@@ -50,8 +50,8 @@ void simulate()
         std::cout << "iteration " << iteration_counter++ << std::endl;
 
         ///////TODO: check this////////////////////////
-        // M_u.setZero();
-        // M_v.setZero();
+        M_u.setZero();
+        M_v.setZero();
         ///////////////////////////////////////////////
 
         /*
@@ -113,9 +113,9 @@ void simulate()
 
         // TODO: remove this
         //////////////////////////////////////////////////
-        // M_particles = M_particles.cwiseAbs();
-        // std::cout << "dt -> " << dt << std::endl;
-        sleep(1);
+        M_particles = M_particles.cwiseAbs();
+        std::cout << "dt -> " << dt << std::endl;
+        sleep(0.8);
         /////////////////////////////////////////////////
 
         t += dt;

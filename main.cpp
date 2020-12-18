@@ -31,14 +31,14 @@ Eigen::Vector2d g(0., -9.8); // gravity acceleration
 const int bb_size_x = 50; // x dimension of the bounding box -> number of grids in x axis
 const int bb_size_y = 50; // y dimension of the bounding box -> number of grids in y axis
 const double grid_interval = 0.1; // size of the grid interval, determines the number of grid cells
-const int num_particles = 100; // number of particles
+const int num_particles = 1; // number of particles
 Eigen::MatrixXd M_particles; // the particle matrix
 Eigen::VectorXd M_particles_u; // particle velocity u
 Eigen::VectorXd M_particles_v; // particle velocity v
 Eigen::MatrixXd M_u; // M_u a 2D matrix that contains the x velociies of the grid
 Eigen::MatrixXd M_v; // M_v a 2D matrix that contains the y velociies of the grid
 Eigen::MatrixXd M_pressure; // Grid pressure matrix
-Eigen::MatrixXd M_signed_distance; //Signed_distance matrix
+Eigen::MatrixXd M_fluid; //Signed_distance matrix
 
 void simulate()
 {
@@ -74,12 +74,12 @@ void simulate()
         // 4.
         Eigen::SparseMatrixd A;
         Eigen::VectorXd f;
-        assemble_pressure_A_2d(M_u, M_v, M_particles, M_signed_distance, A);
+        assemble_pressure_A_2d(M_u, M_v, M_particles, M_fluid, A);
         std::cout <<"A_complete"<<'\n';
 
-        assemble_pressure_f_2d(rho, grid_interval, grid_interval, dt, M_u, M_v, M_signed_distance, M_particles, f);
+        assemble_pressure_f_2d(rho, grid_interval, grid_interval, dt, M_u, M_v, M_fluid, M_particles, f);
         std::cout <<"f_complete"<<'\n';
-        grid_pressure_gradient_update_2d(M_u, M_v, M_particles, M_pressure, M_signed_distance, A, f, rho, dt, grid_interval);
+        grid_pressure_gradient_update_2d(M_u, M_v, M_particles, M_pressure, M_fluid, A, f, rho, dt, grid_interval);
         std::cout <<"pressure_complete"<<'\n';
         // 5.
         for (int i = 0; i < num_particles; i++) {
@@ -144,7 +144,7 @@ int main(int argc, char **argv)
     init_state_2d(bb_size_x,bb_size_y, 
                 grid_interval,num_particles, 
                 M_particles,
-                M_signed_distance,
+                M_fluid,
                 M_u, M_v, 
                 M_particles_u, M_particles_v, 
                 M_pressure);

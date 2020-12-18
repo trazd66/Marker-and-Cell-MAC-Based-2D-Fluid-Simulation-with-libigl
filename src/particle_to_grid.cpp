@@ -61,29 +61,29 @@ void u_particle_onto_grid_u(Eigen::MatrixXd &M_u, Eigen::Vector2d &pos_particle,
     int grid_y_start = (int)((particle_y - 0.5 * interval_y) / interval_y);
     int grid_x_end = grid_x_start + 1;
     int grid_y_end = grid_y_start + 1;
-    // std::cout << particle_x << ' ' << particle_y << '\n';
-    // std::cout << "*** u -> " << grid_x_start << "->" << grid_x_end
-    //             << " " << grid_y_start << "->" << grid_y_end
-    //             << " len_x: " << len_x << " len_y: " << len_y <<'\n';
+    std::cout << particle_x << ' ' << particle_y << '\n';
+    std::cout << "*** u -> " << grid_x_start << "->" << grid_x_end
+                << " " << grid_y_start << "->" << grid_y_end
+                << " len_x: " << len_x << " len_y: " << len_y <<'\n';
 
     int i_idx, j_idx;
     get_matrix_index_2d(grid_x_start, grid_y_start, len_x+1, len_y, i_idx, j_idx);
     // std::cout << "*** u -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
     M_u(i_idx, j_idx) += (1 / (interval_x * interval_y)) * (grid_x_end * interval_x - particle_x) * (grid_y_end * interval_y - particle_y) * u_particle;
-    std::cout << M_u(i_idx, j_idx) << '\n';
+    // std::cout << M_u(i_idx, j_idx) << '\n';
 
     get_matrix_index_2d(grid_x_start, grid_y_end, len_x+1, len_y, i_idx, j_idx);
     // std::cout << "*** u -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
     M_u(i_idx, j_idx) += (1 / (interval_x * interval_y)) * (grid_x_end * interval_x - particle_x) * (particle_y - grid_y_start * interval_y) * u_particle;
-    std::cout << M_u(i_idx, j_idx) << '\n';
+    // std::cout << M_u(i_idx, j_idx) << '\n';
 
     get_matrix_index_2d(grid_x_end, grid_y_start, len_x+1, len_y, i_idx, j_idx);
     // std::cout << "*** u -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
     M_u(i_idx, j_idx) += (1 / (interval_x * interval_y)) * (particle_x - grid_x_start * interval_x) * (grid_y_end * interval_y - particle_y) * u_particle;
-    std::cout << M_u(i_idx, j_idx) << '\n';
+    // std::cout << M_u(i_idx, j_idx) << '\n';
 
     get_matrix_index_2d(grid_x_end, grid_y_end, len_x+1, len_y, i_idx, j_idx);
     // std::cout << "*** u -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
     M_u(i_idx, j_idx) += (1 / (interval_x * interval_y)) * (particle_x - grid_x_start * interval_x) * (particle_y - grid_y_start * interval_y) * u_particle;
-    std::cout << M_u(i_idx, j_idx) << '\n';
+    // std::cout << M_u(i_idx, j_idx) << '\n';
 }

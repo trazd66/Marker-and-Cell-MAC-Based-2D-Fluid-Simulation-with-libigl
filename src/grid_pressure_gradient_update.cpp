@@ -4,7 +4,7 @@
 void grid_pressure_gradient_update_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v,
                                       Eigen::MatrixXd &M_particles,
                                       Eigen::MatrixXd &M_pressure,
-                                      Eigen::MatrixXd &M_signed_distance,
+                                      Eigen::MatrixXd &M_fluid,
                                       Eigen::SparseMatrixd &A,
                                       Eigen::VectorXd &f,
                                       double rho,
@@ -17,7 +17,8 @@ void grid_pressure_gradient_update_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v
     //TODO: calculate the pressure gradient using the pressure p
     //Construct big D to calculate the pressure gradient
     //then use the pressure gradient to update M_u and M_v
-
+    std::cout << A.norm() << '\n';
+    std::cout << f.norm() << '\n';
     int x_len = M_u.cols();
     int y_len = M_v.rows();
     int x_len_non_staggered = x_len - 1;
@@ -43,7 +44,6 @@ void grid_pressure_gradient_update_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v
         {
             int i_idx,j_idx;
             get_matrix_index_2d(x,y,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
-
 			if (i_idx != 0) {
 
 				double du = (dt / (rho * dx)) * (M_pressure(i_idx,j_idx) - M_pressure(i_idx-1,j_idx));

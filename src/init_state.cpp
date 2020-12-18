@@ -3,7 +3,7 @@
 #include <utilities.h>
 void init_state_3d(const int bb_size_x, const int bb_size_y, const int bb_size_z,
                    const double grid_interval, const int num_particles, Eigen::MatrixXd &M_particles,
-                   Eigen::MatrixXd &M_signed_distance,
+                   Eigen::MatrixXd &M_fluid,
                    Eigen::TensorXd &M_u, Eigen::TensorXd &M_v, Eigen::TensorXd &M_w)
 {
 
@@ -22,7 +22,7 @@ void init_state_3d(const int bb_size_x, const int bb_size_y, const int bb_size_z
 void init_state_2d(const int bb_size_x,const int bb_size_y, 
                 const double grid_interval, const int num_particles, 
                 Eigen::MatrixXd &M_particles,
-                Eigen::MatrixXd &M_signed_distance,
+                Eigen::MatrixXd &M_fluid,
                 Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v, 
                 Eigen::VectorXd &M_particles_u, Eigen::VectorXd &M_particles_v, 
                 Eigen::MatrixXd &M_pressures)
@@ -34,12 +34,14 @@ void init_state_2d(const int bb_size_x,const int bb_size_y,
     M_pressures = Eigen::MatrixXd(bb_size_y,bb_size_x);
     M_u = Eigen::MatrixXd(bb_size_y,bb_size_x + 1);
     M_v = Eigen::MatrixXd(bb_size_y + 1,bb_size_x);
+    M_fluid = Eigen::MatrixXd(bb_size_y,bb_size_x);
 
     M_u.setZero();
     M_v.setZero();
     M_pressures.setZero();
     M_particles_u.setZero();
     M_particles_v.setZero();
+    M_fluid.setZero();
 
     /* initialize particle position at random positions within boundaries */
     const int boundary_x = (int)(bb_size_x * grid_interval);
@@ -51,24 +53,8 @@ void init_state_2d(const int bb_size_x,const int bb_size_y,
 
         M_particles(i, 0) = ((double)(rand() % 98 + 1) / 100.0) * boundary_x;
         M_particles(i, 1) = ((double)(rand() % 98 + 1) / 100.0) * boundary_y;
+        int i_idx,j_idx;
+        get_matrix_index_2d((int)M_particles(i, 0)/grid_interval,(int)M_particles(i, 1)/grid_interval,bb_size_x,bb_size_y,i_idx,j_idx);        
+        M_fluid(i_idx, j_idx) = 1;
     }
-
-    //calculating initial signed distance matrix
-    //set to -1 for now
-    M_signed_distance = Eigen::MatrixXd(bb_size_y + 1,bb_size_x + 1);
-    M_signed_distance.setOnes();
-    M_signed_distance *= -1;//everything is inside surface
-    //except the boundaries, they should be outside of our surface at all times
-    for (int j = 0; j < bb_size_y + 1; j++)
-    {
-        M_signed_distance(j,0) = 1; // y = j, x = 0
-        M_signed_distance(j,bb_size_x) = 1; // y = j, x = bb_size_x
-    }
-
-    for (int i = 0; i < bb_size_x + 1; i++)
-    {
-        M_signed_distance(0,i) = 1;
-        M_signed_distance(bb_size_y,i) = 1;
-    }
-
 }

@@ -38,7 +38,7 @@ void init_state_3d(const int bb_size_x,const int bb_size_y,const int bb_size_z,
 void init_state_2d(const int bb_size_x,const int bb_size_y, 
                 const double grid_interval, const int num_particles, 
                 Eigen::MatrixXd &M_particles,
-                Eigen::MatrixXd &M_signed_distance,
+                Eigen::MatrixXd &M_fluid,
                 Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v, 
                 Eigen::VectorXd &M_particles_u, Eigen::VectorXd &M_particles_v, 
                 Eigen::MatrixXd &M_pressures);

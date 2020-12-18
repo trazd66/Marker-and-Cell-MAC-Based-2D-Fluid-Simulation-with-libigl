@@ -15,5 +15,5 @@
  ***/
 void assemble_pressure_A_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v, 
                             Eigen::MatrixXd &M_particles, 
-                            Eigen::MatrixXd &M_signed_distance,
+                            Eigen::MatrixXd &M_fluid,
                             Eigen::SparseMatrixd &A);

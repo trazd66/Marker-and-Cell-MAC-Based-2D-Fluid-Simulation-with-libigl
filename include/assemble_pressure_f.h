@@ -19,5 +19,5 @@
  ***/
 void assemble_pressure_f_2d(double rho, double dx, double dy, double dt, 
                             Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v, 
-                            Eigen::MatrixXd &M_signed_distance,Eigen::MatrixXd &M_particles,
+                            Eigen::MatrixXd &M_fluid,Eigen::MatrixXd &M_particles,
                             Eigen::VectorXd &f);

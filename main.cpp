@@ -20,6 +20,7 @@
 #include <utilities.h>
 #include <FLIP.h>
 #include <external_force_apply.h>
+#include <particle_advection.h>
 int iteration_counter = 0;
 
 //Simulation State
@@ -34,7 +35,7 @@ double FLIP_potion = 0.5; // percentage of FLIP result in particle velocity outo
 const int bb_size_x = 50; // x dimension of the bounding box -> number of grids in x axis
 const int bb_size_y = 50; // y dimension of the bounding box -> number of grids in y axis
 const double grid_interval = 0.1; // size of the grid interval, determines the number of grid cells
-const int num_particles = 1000; // number of particles
+const int num_particles = 100000; // number of particles
 Eigen::MatrixXd M_particles; // the particle matrix
 Eigen::VectorXd M_particles_u; // particle velocity u
 Eigen::VectorXd M_particles_v; // particle velocity v
@@ -56,8 +57,8 @@ void simulate()
         // std::cout << "iteration " << iteration_counter++ << std::endl;
 
         ///////TODO: check this////////////////////////
-        M_u.setZero();
-        M_v.setZero();
+        // M_u.setZero();
+        // M_v.setZero();
         ///////////////////////////////////////////////
 
         /*
@@ -68,8 +69,21 @@ void simulate()
             5. for each particle update particle velocity from grid (grid -> particle).
         */
 
-        //    old M_u and M_v for calculating delta_M_u and delta_M_v in FLIP
+        // std::cout << "iteration " << iteration_counter++ << std::endl;
 
+        //advection, a.k.a moving the particle
+        // advect_particle_2d(M_particles, M_particles_u, M_particles_v, dt);
+
+        // clip the particle positions
+        M_particles = M_particles.cwiseMin(grid_interval * bb_size_x).cwiseMax(0);
+
+        //    old M_u and M_v for calculating delta_M_u and delta_M_v in FLIP
+        Eigen::MatrixXd old_M_u;
+        Eigen::MatrixXd old_M_v;
+        old_M_u = M_u;
+        old_M_v = M_v;
+        M_u.setZero();
+        M_v.setZero();
         // 2.
         for (int i = 0; i < num_particles; i++) {
            // 3.
@@ -129,18 +143,15 @@ void simulate()
         // adjust the timestep according to u and v
         update_dt(dt, num_particles, grid_interval, M_particles_u, M_particles_v);
 
-        // update particle positions
-        M_particles.col(0) += M_particles_u * dt;
-        M_particles.col(1) += M_particles_v * dt;
-
-        // clip the particle positions
-        M_particles = M_particles.cwiseMin(grid_interval * bb_size_x).cwiseMax(0);
-
         // TODO: remove this
         //////////////////////////////////////////////////
         // std::cout << "dt -> " << dt << std::endl;
         // sleep(0.8);
         /////////////////////////////////////////////////
+
+
+        M_particles.col(0) += M_particles_u * dt;
+        M_particles.col(1) += M_particles_v * dt;
 
         t += dt;
     }

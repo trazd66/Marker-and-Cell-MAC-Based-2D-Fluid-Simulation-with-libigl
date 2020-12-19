@@ -25,7 +25,7 @@ int iteration_counter = 0;
 bool simulating = true;
 bool is2d = true;
 
-double rho = 1.0; // density of water
+double rho = 10.0; // density of water
 double t = 0;      //simulation time
 double dt = 0.005; //time step
 Eigen::Vector2d g(0., -9.8); // gravity acceleration
@@ -33,7 +33,7 @@ Eigen::Vector2d g(0., -9.8); // gravity acceleration
 const int bb_size_x = 50; // x dimension of the bounding box -> number of grids in x axis
 const int bb_size_y = 50; // y dimension of the bounding box -> number of grids in y axis
 const double grid_interval = 0.1; // size of the grid interval, determines the number of grid cells
-const int num_particles = 10; // number of particles
+const int num_particles = 1000; // number of particles
 Eigen::MatrixXd M_particles; // the particle matrix
 Eigen::VectorXd M_particles_u; // particle velocity u
 Eigen::VectorXd M_particles_v; // particle velocity v
@@ -104,8 +104,8 @@ void simulate()
         }
 
         // adjust the timestep according to u and v
-        normalize_velocity(M_particles_u, M_particles_v);
-        // update_dt(dt, num_particles, grid_interval, M_particles_u, M_particles_v);
+        // normalize_velocity(M_particles_u, M_particles_v);
+        update_dt(dt, num_particles, grid_interval, M_particles_u, M_particles_v);
 
         // update particle positions
         M_particles.col(0) += M_particles_u * dt;

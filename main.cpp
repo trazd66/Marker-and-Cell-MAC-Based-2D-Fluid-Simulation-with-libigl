@@ -18,7 +18,8 @@
 #include <assemble_pressure_f.h>
 #include <grid_pressure_gradient_update.h>
 #include <utilities.h>
-
+#include <FLIP.h>
+#include <external_force_apply.h>
 int iteration_counter = 0;
 
 //Simulation State
@@ -28,7 +29,7 @@ bool is2d = true;
 double rho = 10.0; // density of water
 double t = 0;      //simulation time
 double dt = 0.005; //time step
-Eigen::Vector2d g(0., -9.8); // gravity acceleration
+double FLIP_potion = 0.5; // percentage of FLIP result in particle velocity outof (FLIP + PIC)
 
 const int bb_size_x = 50; // x dimension of the bounding box -> number of grids in x axis
 const int bb_size_y = 50; // y dimension of the bounding box -> number of grids in y axis
@@ -47,11 +48,11 @@ void simulate()
 
     while (simulating)
     {
-        std::cout << "iteration " << iteration_counter++ << std::endl;
+        // std::cout << "iteration " << iteration_counter++ << std::endl;
 
         ///////TODO: check this////////////////////////
-        M_u.setZero();
-        M_v.setZero();
+        // M_u.setZero();
+        // M_v.setZero();
         ///////////////////////////////////////////////
 
         /*
@@ -62,10 +63,13 @@ void simulate()
             5. for each particle update particle velocity from grid (grid -> particle).
         */
 
+        //    old M_u and M_v for calculating delta_M_u and delta_M_v in FLIP
+       Eigen::MatrixXd old_M_u;
+       Eigen::MatrixXd old_M_v;
+       old_M_u = M_u;
+       old_M_v = M_v;
+
         // 2.
-        Eigen::VectorXd g_acc_vector(num_particles);
-        g_acc_vector.setOnes();
-        M_particles_v += g_acc_vector * g[1] * dt;
         for (int i = 0; i < num_particles; i++) {
            // 3.
            Eigen::Vector2d particle_pos;
@@ -77,17 +81,24 @@ void simulate()
            u_particle_onto_grid_u(M_u, particle_pos, u_particle, grid_interval, grid_interval, bb_size_x, bb_size_y);
         }
 
-        std::cout <<"particle_grid_complete"<<'\n';
+        //apply external forces
+        apply_external_force_2d(M_u,M_v,dt);
+        
+
+        // normalize grid to make sure we have a sane grid velocity
+        normalize_grid(M_u, M_v);
+        // std::cout <<"particle_grid_complete"<<'\n';
+
         // 4.
         Eigen::SparseMatrixd A;
         Eigen::VectorXd f;
         assemble_pressure_A_2d(M_u, M_v, M_particles, M_fluid, A);
-        std::cout <<"A_complete"<<'\n';
+        // std::cout <<"A_complete"<<'\n';
 
         assemble_pressure_f_2d(rho, grid_interval, grid_interval, dt, M_u, M_v, M_fluid, M_particles, f);
-        std::cout <<"f_complete"<<'\n';
+        // std::cout <<"f_complete"<<'\n';
         grid_pressure_gradient_update_2d(M_u, M_v, M_particles, M_pressure, M_fluid, A, f, rho, dt, grid_interval);
-        std::cout <<"pressure_complete"<<'\n';
+        // std::cout <<"pressure_complete"<<'\n';
         // 5.
         for (int i = 0; i < num_particles; i++) {
             Eigen::Vector2d particle_pos;
@@ -96,24 +107,33 @@ void simulate()
             double u_particle = M_particles_u[i];
             double v_particle = M_particles_v[i];
 
-            double new_u = grid_to_particle_PIC_u (M_u, particle_pos, grid_interval, grid_interval, bb_size_x, bb_size_y);
-            double new_v = grid_to_particle_PIC_v (M_v, particle_pos, grid_interval, grid_interval, bb_size_x, bb_size_y);
+            double new_u_PIC = grid_to_particle_PIC_u (M_u, particle_pos, grid_interval, grid_interval, bb_size_x, bb_size_y);
+            double new_v_PIC = grid_to_particle_PIC_v (M_v, particle_pos, grid_interval, grid_interval, bb_size_x, bb_size_y);
+
+            double new_u_FLIP = grid_to_particle_FLIP_u(old_M_u, M_u, particle_pos, u_particle, grid_interval, bb_size_x, bb_size_y);
+            double new_v_FLIP = grid_to_particle_FLIP_v(old_M_v, M_v, particle_pos, v_particle, grid_interval, bb_size_x, bb_size_y);
+
+            double new_u = FLIP_potion * new_u_FLIP + (1 - FLIP_potion) * new_u_PIC;
+            double new_v = FLIP_potion * new_v_FLIP + (1 - FLIP_potion) * new_v_PIC;
 
             M_particles_u[i] = new_u;
             M_particles_v[i] = new_v;
         }
 
-        // adjust the timestep according to u and v
+        // normalize particle velocity to make sure we have a sane particle velocity
         // normalize_velocity(M_particles_u, M_particles_v);
+        // adjust the timestep according to u and v
         update_dt(dt, num_particles, grid_interval, M_particles_u, M_particles_v);
 
         // update particle positions
         M_particles.col(0) += M_particles_u * dt;
         M_particles.col(1) += M_particles_v * dt;
 
+        // clip the particle positions
+        M_particles = M_particles.cwiseMin(grid_interval * bb_size_x).cwiseMax(0);
+
         // TODO: remove this
         //////////////////////////////////////////////////
-        M_particles = M_particles.cwiseAbs();
         // std::cout << "dt -> " << dt << std::endl;
         // sleep(0.8);
         /////////////////////////////////////////////////

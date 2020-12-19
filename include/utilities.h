@@ -21,3 +21,5 @@ bool on_boundary(const int x, const int len_x);
 void update_dt(double &dt, int num_particles, double grid_interval, Eigen::VectorXd &M_particles_u, Eigen::VectorXd &M_particles_v);
 
 void normalize_velocity(Eigen::VectorXd &M_particles_u, Eigen::VectorXd &M_particles_v);
+
+void normalize_grid(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v);

@@ -20,6 +20,7 @@
 #include <utilities.h>
 #include <FLIP.h>
 #include <external_force_apply.h>
+#include <particle_advection.h>
 int iteration_counter = 0;
 
 //Simulation State
@@ -48,13 +49,6 @@ void simulate()
 
     while (simulating)
     {
-        // std::cout << "iteration " << iteration_counter++ << std::endl;
-
-        ///////TODO: check this////////////////////////
-        // M_u.setZero();
-        // M_v.setZero();
-        ///////////////////////////////////////////////
-
         /*
             1. Advection natively satisfied because no acceleration involved during movement of particles.
             2. update particle velocities due to gravity.
@@ -62,13 +56,26 @@ void simulate()
             4. for each particle do pressure projection.
             5. for each particle update particle velocity from grid (grid -> particle).
         */
+        // std::cout << "iteration " << iteration_counter++ << std::endl;
+
+        ///////TODO: check this////////////////////////
+
+        ///////////////////////////////////////////////
+
+        //advection, a.k.a moving the particle
+        advect_particle_2d(M_particles, M_particles_u, M_particles_v, dt);
+        // clip the particle positions
+        M_particles = M_particles.cwiseMin(grid_interval * bb_size_x).cwiseMax(0);
+
+
 
         //    old M_u and M_v for calculating delta_M_u and delta_M_v in FLIP
-       Eigen::MatrixXd old_M_u;
-       Eigen::MatrixXd old_M_v;
-       old_M_u = M_u;
-       old_M_v = M_v;
-
+        Eigen::MatrixXd old_M_u;
+        Eigen::MatrixXd old_M_v;
+        old_M_u = M_u;
+        old_M_v = M_v;
+        M_u.setZero();
+        M_v.setZero();
         // 2.
         for (int i = 0; i < num_particles; i++) {
            // 3.
@@ -125,12 +132,7 @@ void simulate()
         // adjust the timestep according to u and v
         update_dt(dt, num_particles, grid_interval, M_particles_u, M_particles_v);
 
-        // update particle positions
-        M_particles.col(0) += M_particles_u * dt;
-        M_particles.col(1) += M_particles_v * dt;
 
-        // clip the particle positions
-        M_particles = M_particles.cwiseMin(grid_interval * bb_size_x).cwiseMax(0);
 
         // TODO: remove this
         //////////////////////////////////////////////////

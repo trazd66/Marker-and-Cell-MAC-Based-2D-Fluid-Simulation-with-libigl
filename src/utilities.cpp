@@ -19,8 +19,8 @@ void update_dt(double &dt, int num_particles, double grid_interval, Eigen::Vecto
 	double u_max = M_particles_u.cwiseAbs().maxCoeff();
 	double v_max = M_particles_v.cwiseAbs().maxCoeff();
 
-    std::cout << "u_max -> " << u_max << std::endl;
-    std::cout << "v_max -> " << v_max << std::endl;
+    // std::cout << "u_max -> " << u_max << std::endl;
+    // std::cout << "v_max -> " << v_max << std::endl;
 
 	double dt_u_tmp;
 	if (u_max == 0){

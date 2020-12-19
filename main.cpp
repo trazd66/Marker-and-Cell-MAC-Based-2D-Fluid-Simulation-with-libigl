@@ -46,13 +46,18 @@ Eigen::MatrixXd M_fluid; //Signed_distance matrix
 void simulate()
 {
 
+    Eigen::MatrixXd old_M_u;
+    Eigen::MatrixXd old_M_v;
+    old_M_u = M_u;
+    old_M_v = M_v;
+
     while (simulating)
     {
         // std::cout << "iteration " << iteration_counter++ << std::endl;
 
         ///////TODO: check this////////////////////////
-        // M_u.setZero();
-        // M_v.setZero();
+        M_u.setZero();
+        M_v.setZero();
         ///////////////////////////////////////////////
 
         /*
@@ -64,10 +69,6 @@ void simulate()
         */
 
         //    old M_u and M_v for calculating delta_M_u and delta_M_v in FLIP
-       Eigen::MatrixXd old_M_u;
-       Eigen::MatrixXd old_M_v;
-       old_M_u = M_u;
-       old_M_v = M_v;
 
         // 2.
         for (int i = 0; i < num_particles; i++) {
@@ -119,6 +120,9 @@ void simulate()
             M_particles_u[i] = new_u;
             M_particles_v[i] = new_v;
         }
+
+        old_M_u = M_u;
+        old_M_v = M_v;
 
         // normalize particle velocity to make sure we have a sane particle velocity
         // normalize_velocity(M_particles_u, M_particles_v);

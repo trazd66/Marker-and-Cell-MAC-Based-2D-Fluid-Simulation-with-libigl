@@ -91,7 +91,7 @@ void simulate()
         }
 
         //advection, a.k.a moving the particle
-        advect_particle_2d(M_particles, M_particles_u, M_particles_v, dt);
+        advect_particle_2d(M_particles, M_particles_u, M_particles_v, dt, M_u, M_v, grid_interval, bb_size_x, bb_size_y);
         update_markers_2d(M_particles,grid_interval,M_fluid);
         
         extrapolate_velocity_2d(M_u,M_v,M_fluid);

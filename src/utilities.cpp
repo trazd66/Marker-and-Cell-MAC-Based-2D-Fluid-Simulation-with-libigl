@@ -61,7 +61,7 @@ void normalize_velocity(Eigen::VectorXd &M_particles_u, Eigen::VectorXd &M_parti
 void normalize_grid(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v) {
 	double u_max = M_u.cwiseAbs().maxCoeff();
 	double v_max = M_v.cwiseAbs().maxCoeff();
-	std::cout << M_u.maxCoeff() << ' ' << M_v.maxCoeff() << '\n';
+	// std::cout << M_u.minCoeff() << ' ' << M_v.minCoeff() << '\n';
 
     if (u_max != 0) {
         M_u /= u_max;

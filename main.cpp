@@ -22,7 +22,8 @@
 #include <external_force_apply.h>
 #include <particle_advection.h>
 #include <update_markers.h>
-
+#include <velocity_extrapolation.h>
+#include <set_boundary.h>
 
 int iteration_counter = 0;
 
@@ -38,7 +39,7 @@ double FLIP_potion = 0; // percentage of FLIP result in particle velocity outof 
 const int bb_size_x = 50; // x dimension of the bounding box -> number of grids in x axis
 const int bb_size_y = 50; // y dimension of the bounding box -> number of grids in y axis
 const double grid_interval = 0.1; // size of the grid interval, determines the number of grid cells
-const int num_particles = 1000; // number of particles
+const int num_particles = 100; // number of particles
 Eigen::MatrixXd M_particles; // the particle matrix
 Eigen::VectorXd M_particles_u; // particle velocity u
 Eigen::VectorXd M_particles_v; // particle velocity v
@@ -58,12 +59,6 @@ void simulate()
 
     while (simulating)
     {
-        // std::cout << "iteration " << iteration_counter++ << std::endl;
-
-        ///////TODO: check this////////////////////////
-        // M_u.setZero();
-        // M_v.setZero();
-        ///////////////////////////////////////////////
 
         /*
             1. Advection natively satisfied because no acceleration involved during movement of particles.
@@ -73,7 +68,7 @@ void simulate()
             5. for each particle update particle velocity from grid (grid -> particle).
         */
 
-        // std::cout << "iteration " << iteration_counter++ << std::endl;
+        std::cout << "iteration " << iteration_counter++ << std::endl;
 
 
         //    old M_u and M_v for calculating delta_M_u and delta_M_v in FLIP
@@ -95,25 +90,30 @@ void simulate()
            u_particle_onto_grid_u(M_u, particle_pos, u_particle, grid_interval, grid_interval, bb_size_x, bb_size_y);
         }
 
+        //advection, a.k.a moving the particle
+        advect_particle_2d(M_particles, M_particles_u, M_particles_v, dt);
+        update_markers_2d(M_particles,grid_interval,M_fluid);
+        
+        extrapolate_velocity_2d(M_u,M_v,M_fluid);
         
 
         // normalize grid to make sure we have a sane grid velocity
         normalize_grid(M_u, M_v);
-        // std::cout <<"particle_grid_complete"<<'\n';
-
+        std::cout <<"particle_grid_complete"<<'\n';
         //apply external forces
         apply_external_force_2d(M_u,M_v,dt);
 
+        set_boundary_2d(M_u,M_v);
         // 4.
         Eigen::SparseMatrixd A;
         Eigen::VectorXd f;
         assemble_pressure_A_2d(M_u, M_v, M_particles, M_fluid, A);
-        // std::cout <<"A_complete"<<'\n';
+        std::cout <<"A_complete"<<'\n';
 
         assemble_pressure_f_2d(rho, grid_interval, grid_interval, dt, M_u, M_v, M_fluid, M_particles, f);
-        // std::cout <<"f_complete"<<'\n';
+        std::cout <<"f_complete"<<'\n';
         grid_pressure_gradient_update_2d(M_u, M_v, M_particles, M_pressure, M_fluid, A, f, rho, dt, grid_interval);
-        // std::cout <<"pressure_complete"<<'\n';
+        std::cout <<"pressure_complete"<<'\n';
         // 5.
         for (int i = 0; i < num_particles; i++) {
             Eigen::Vector2d particle_pos;
@@ -144,9 +144,7 @@ void simulate()
         update_dt(dt, num_particles, grid_interval, M_particles_u, M_particles_v);
 
 
-        //advection, a.k.a moving the particle
-        advect_particle_2d(M_particles, M_particles_u, M_particles_v, dt);
-        update_markers_2d(M_particles,marker_index,grid_interval,M_fluid);
+
         // clip the particle positions
         M_particles = M_particles.cwiseMin(grid_interval * bb_size_x).cwiseMax(0);
 
@@ -205,7 +203,6 @@ int main(int argc, char **argv)
                 grid_interval,num_particles, 
                 M_particles,
                 M_fluid,
-                marker_index,
                 M_u, M_v, 
                 M_particles_u, M_particles_v, 
                 M_pressure);

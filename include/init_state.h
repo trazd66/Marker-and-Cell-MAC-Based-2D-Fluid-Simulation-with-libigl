@@ -39,7 +39,6 @@ void init_state_2d(const int bb_size_x,const int bb_size_y,
                 const double grid_interval, const int num_particles, 
                 Eigen::MatrixXd &M_particles,
                 Eigen::MatrixXd &M_fluid,
-                std::vector<int> marker_index,
                 Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v, 
                 Eigen::VectorXd &M_particles_u, Eigen::VectorXd &M_particles_v, 
                 Eigen::MatrixXd &M_pressures);

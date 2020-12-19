@@ -14,6 +14,7 @@ void grid_pressure_gradient_update_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v
 
     Eigen::VectorXd p;
     solve_pressure_p(p, A, f);
+    // std::cout << f.cwiseAbs().maxCoeff() << '\n';
     //TODO: calculate the pressure gradient using the pressure p
     //Construct big D to calculate the pressure gradient
     //then use the pressure gradient to update M_u and M_v
@@ -37,6 +38,7 @@ void grid_pressure_gradient_update_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v
             M_pressure(i_idx,j_idx) = p[idx];
         }
     }
+    // std::cout << M_pressure.cwiseAbs().maxCoeff() << '\n';
 
     for (int x = 0; x < x_len_non_staggered; x++)
     {

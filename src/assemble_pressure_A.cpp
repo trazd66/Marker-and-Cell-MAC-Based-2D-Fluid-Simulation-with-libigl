@@ -31,32 +31,36 @@ void assemble_pressure_A_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v,
 
                 // std::cout << "i idx: " << i_idx << " j idx" << j_idx << std::endl;
                 //v_x,y+1
-                get_matrix_index_2d(x,y+1,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
-                if(!on_boundary(y+1,y_len_non_staggered)&& 
-                        M_fluid(i_idx,j_idx) == 1){//top
-                    A_triplets.push_back(Eigen::Triplet<double>(idx,i_idx * y_len_non_staggered + j_idx,-1.)); 
+                if(!on_boundary(y+1,y_len_non_staggered)){//top
+                    get_matrix_index_2d(x,y+1,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
+                    if(M_fluid(i_idx,j_idx) == 1){
+                        A_triplets.push_back(Eigen::Triplet<double>(idx,i_idx * y_len_non_staggered + j_idx,-1.)); 
+                    }
                     num_fluid_cells++;
                 }
                 //v_x,y-1
-                get_matrix_index_2d(x,y-1,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
-                if(!on_boundary(y-1,y_len_non_staggered)&& 
-                        M_fluid(i_idx,j_idx) == 1){//bot
-                    A_triplets.push_back(Eigen::Triplet<double>(idx,i_idx * y_len_non_staggered + j_idx,-1.)); 
+                if(!on_boundary(y-1,y_len_non_staggered)){//bot
+                    get_matrix_index_2d(x,y-1,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
+                    if(M_fluid(i_idx,j_idx) == 1){
+                        A_triplets.push_back(Eigen::Triplet<double>(idx,i_idx * y_len_non_staggered + j_idx,-1.)); 
+                    }                    
                     num_fluid_cells++;
                 }
 
                 //u_x-1,y
-                get_matrix_index_2d(x-1,y,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
-                if(!on_boundary(x-1,x_len_non_staggered)&& 
-                        M_fluid(i_idx,j_idx) == 1){//left
-                    A_triplets.push_back(Eigen::Triplet<double>(idx,i_idx * y_len_non_staggered + j_idx,-1.)); 
+                if(!on_boundary(x-1,x_len_non_staggered)){//left
+                    get_matrix_index_2d(x-1,y,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
+                    if(M_fluid(i_idx,j_idx) == 1){
+                        A_triplets.push_back(Eigen::Triplet<double>(idx,i_idx * y_len_non_staggered + j_idx,-1.)); 
+                    }     
                     num_fluid_cells++;
                 }
                 //u_x+1,y
-                get_matrix_index_2d(x+1,y,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
-                if(!on_boundary(x+1,x_len_non_staggered)&& 
-                        M_fluid(i_idx,j_idx) == 1){//right
-                    A_triplets.push_back(Eigen::Triplet<double>(idx,i_idx * y_len_non_staggered + j_idx,-1.)); 
+                if(!on_boundary(x+1,x_len_non_staggered)){//right
+                    get_matrix_index_2d(x+1,y,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
+                    if(M_fluid(i_idx,j_idx) == 1){
+                        A_triplets.push_back(Eigen::Triplet<double>(idx,i_idx * y_len_non_staggered + j_idx,-1.)); 
+                    }                      
                     num_fluid_cells++;
                 }
                 

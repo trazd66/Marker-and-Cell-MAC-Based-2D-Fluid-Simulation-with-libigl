@@ -2,6 +2,21 @@
 #include <Eigen/Sparse>
 #include <EigenTypes.h>
 #include <iostream>
+
+/* adopted from https://stackoverflow.com/questions/3767869/adding-message-to-assert */
+#ifndef NDEBUG
+#   define ASSERT(condition, message) \
+    do { \
+        if (! (condition)) { \
+            std::cerr << "Assertion `" #condition "` failed in " << __FILE__ \
+                      << " line " << __LINE__ << ": " << message << std::endl; \
+            std::terminate(); \
+        } \
+    } while (false)
+#else
+#   define ASSERT(condition, message) do { } while (false)
+#endif
+
 /***
  * 
  * transates the x,y position from the paper into eigen indexes

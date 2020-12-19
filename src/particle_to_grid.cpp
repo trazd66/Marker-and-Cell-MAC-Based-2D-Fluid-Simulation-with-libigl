@@ -21,14 +21,23 @@ void v_particle_onto_grid_v(Eigen::MatrixXd &M_v, Eigen::Vector2d &pos_particle,
 
     int i_idx, j_idx;
     get_matrix_index_2d(grid_x_start, grid_y_start, len_x, len_y+1, i_idx, j_idx);
+    ASSERT((i_idx >= 0) && (i_idx <= len_y), "i_idx -> " << i_idx);
+    ASSERT((j_idx >= 0) && (j_idx <= len_x - 1), "j_idx -> " << j_idx);
     M_v(i_idx, j_idx) += (1 / (interval_x * interval_y)) * (grid_x_end * interval_x - particle_x) * (grid_y_end * interval_y - particle_y) * v_particle;
+
     get_matrix_index_2d(grid_x_start, grid_y_end, len_x, len_y+1, i_idx, j_idx);
+    ASSERT((i_idx >= 0) && (i_idx <= len_y), "i_idx -> " << i_idx);
+    ASSERT((j_idx >= 0) && (j_idx <= len_x - 1), "j_idx -> " << j_idx);
     M_v(i_idx, j_idx) += (1 / (interval_x * interval_y)) * (grid_x_end * interval_x - particle_x) * (particle_y - grid_y_start * interval_y) * v_particle;
 
     get_matrix_index_2d(grid_x_end, grid_y_start, len_x, len_y+1, i_idx, j_idx);
+    ASSERT((i_idx >= 0) && (i_idx <= len_y), "i_idx -> " << i_idx);
+    ASSERT((j_idx >= 0) && (j_idx <= len_x - 1), "j_idx -> " << j_idx);
     M_v(i_idx, j_idx) += (1 / (interval_x * interval_y)) * (particle_x - grid_x_start * interval_x) * (grid_y_end * interval_y - particle_y) * v_particle;
 
     get_matrix_index_2d(grid_x_end, grid_y_end, len_x, len_y+1, i_idx, j_idx);
+    ASSERT((i_idx >= 0) && (i_idx <= len_y), "i_idx -> " << i_idx);
+    ASSERT((j_idx >= 0) && (j_idx <= len_x - 1), "j_idx -> " << j_idx);
     M_v(i_idx, j_idx) += (1 / (interval_x * interval_y)) * (particle_x - grid_x_start * interval_x) * (particle_y - grid_y_start * interval_y) * v_particle;
 
 }
@@ -53,14 +62,22 @@ void u_particle_onto_grid_u(Eigen::MatrixXd &M_u, Eigen::Vector2d &pos_particle,
 
     int i_idx, j_idx;
     get_matrix_index_2d(grid_x_start, grid_y_start, len_x+1, len_y, i_idx, j_idx);
+    ASSERT((i_idx >= 0) && (i_idx <= len_y - 1), "i_idx -> " << i_idx);
+    ASSERT((j_idx >= 0) && (j_idx <= len_x), "j_idx -> " << j_idx);
     M_u(i_idx, j_idx) += (1 / (interval_x * interval_y)) * (grid_x_end * interval_x - particle_x) * (grid_y_end * interval_y - particle_y) * u_particle;
 
     get_matrix_index_2d(grid_x_start, grid_y_end, len_x+1, len_y, i_idx, j_idx);
+    ASSERT((i_idx >= 0) && (i_idx <= len_y - 1), "i_idx -> " << i_idx);
+    ASSERT((j_idx >= 0) && (j_idx <= len_x), "j_idx -> " << j_idx);
     M_u(i_idx, j_idx) += (1 / (interval_x * interval_y)) * (grid_x_end * interval_x - particle_x) * (particle_y - grid_y_start * interval_y) * u_particle;
 
     get_matrix_index_2d(grid_x_end, grid_y_start, len_x+1, len_y, i_idx, j_idx);
+    ASSERT((i_idx >= 0) && (i_idx <= len_y - 1), "i_idx -> " << i_idx);
+    ASSERT((j_idx >= 0) && (j_idx <= len_x), "j_idx -> " << j_idx);
     M_u(i_idx, j_idx) += (1 / (interval_x * interval_y)) * (particle_x - grid_x_start * interval_x) * (grid_y_end * interval_y - particle_y) * u_particle;
 
     get_matrix_index_2d(grid_x_end, grid_y_end, len_x+1, len_y, i_idx, j_idx);
+    ASSERT((i_idx >= 0) && (i_idx <= len_y - 1), "i_idx -> " << i_idx);
+    ASSERT((j_idx >= 0) && (j_idx <= len_x), "j_idx -> " << j_idx);
     M_u(i_idx, j_idx) += (1 / (interval_x * interval_y)) * (particle_x - grid_x_start * interval_x) * (particle_y - grid_y_start * interval_y) * u_particle;
 }

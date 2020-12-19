@@ -21,15 +21,23 @@ double grid_to_particle_FLIP_u (Eigen::MatrixXd &old_M_u, Eigen::MatrixXd &M_u, 
 
     int i_idx, j_idx;
     get_matrix_index_2d(grid_x_start, grid_y_start, len_x+1, len_y, i_idx, j_idx);
+    ASSERT((i_idx >= 0) && (i_idx <= len_y - 1), "i_idx -> " << i_idx);
+    ASSERT((j_idx >= 0) && (j_idx <= len_x), "j_idx -> " << j_idx);
     double x_start_y_start = (1 / (grid_interval * grid_interval)) * (grid_x_end * grid_interval - particle_x) * (grid_y_end * grid_interval - particle_y) * delta_M_u(i_idx, j_idx);
 
     get_matrix_index_2d(grid_x_start, grid_y_end, len_x+1, len_y, i_idx, j_idx);
+    ASSERT((i_idx >= 0) && (i_idx <= len_y - 1), "i_idx -> " << i_idx);
+    ASSERT((j_idx >= 0) && (j_idx <= len_x), "j_idx -> " << j_idx);
     double x_start_y_end = (1 / (grid_interval * grid_interval)) * (grid_x_end * grid_interval - particle_x) * (particle_y - grid_y_start * grid_interval) * delta_M_u(i_idx, j_idx);
 
     get_matrix_index_2d(grid_x_end, grid_y_start, len_x+1, len_y, i_idx, j_idx);
+    ASSERT((i_idx >= 0) && (i_idx <= len_y - 1), "i_idx -> " << i_idx);
+    ASSERT((j_idx >= 0) && (j_idx <= len_x), "j_idx -> " << j_idx);
     double x_end_y_start = (1 / (grid_interval * grid_interval)) * (particle_x - grid_x_start * grid_interval) * (grid_y_end * grid_interval - particle_y) * delta_M_u(i_idx, j_idx);
 
     get_matrix_index_2d(grid_x_end, grid_y_end, len_x+1, len_y, i_idx, j_idx);
+    ASSERT((i_idx >= 0) && (i_idx <= len_y - 1), "i_idx -> " << i_idx);
+    ASSERT((j_idx >= 0) && (j_idx <= len_x), "j_idx -> " << j_idx);
     double x_end_y_end = (1 / (grid_interval * grid_interval)) * (particle_x - grid_x_start * grid_interval) * (particle_y - grid_y_start * grid_interval) * delta_M_u(i_idx, j_idx);
 
     double result = particle_u + (x_start_y_start + x_start_y_end + x_end_y_start + x_end_y_end);
@@ -56,15 +64,23 @@ double grid_to_particle_FLIP_v (Eigen::MatrixXd &old_M_v, Eigen::MatrixXd &M_v, 
 
     int i_idx, j_idx;
     get_matrix_index_2d(grid_x_start, grid_y_start, len_x, len_y+1, i_idx, j_idx);
+    ASSERT((i_idx >= 0) && (i_idx <= len_y), "i_idx -> " << i_idx);
+    ASSERT((j_idx >= 0) && (j_idx <= len_x - 1), "j_idx -> " << j_idx);
     double x_start_y_start = (1 / (grid_interval * grid_interval)) * (grid_x_end * grid_interval - particle_x) * (grid_y_end * grid_interval - particle_y) * delta_M_v(i_idx, j_idx);
 
     get_matrix_index_2d(grid_x_start, grid_y_end, len_x, len_y+1, i_idx, j_idx);
+    ASSERT((i_idx >= 0) && (i_idx <= len_y), "i_idx -> " << i_idx);
+    ASSERT((j_idx >= 0) && (j_idx <= len_x - 1), "j_idx -> " << j_idx);
     double x_start_y_end = (1 / (grid_interval * grid_interval)) * (grid_x_end * grid_interval - particle_x) * (particle_y - grid_y_start * grid_interval) * delta_M_v(i_idx, j_idx);
 
     get_matrix_index_2d(grid_x_end, grid_y_start, len_x, len_y+1, i_idx, j_idx);
+    ASSERT((i_idx >= 0) && (i_idx <= len_y), "i_idx -> " << i_idx);
+    ASSERT((j_idx >= 0) && (j_idx <= len_x - 1), "j_idx -> " << j_idx);
     double x_end_y_start = (1 / (grid_interval * grid_interval)) * (particle_x - grid_x_start * grid_interval) * (grid_y_end * grid_interval - particle_y) * delta_M_v(i_idx, j_idx);
 
     get_matrix_index_2d(grid_x_end, grid_y_end, len_x, len_y+1, i_idx, j_idx);
+    ASSERT((i_idx >= 0) && (i_idx <= len_y), "i_idx -> " << i_idx);
+    ASSERT((j_idx >= 0) && (j_idx <= len_x - 1), "j_idx -> " << j_idx);
     double x_end_y_end = (1 / (grid_interval * grid_interval)) * (particle_x - grid_x_start * grid_interval) * (particle_y - grid_y_start * grid_interval) * delta_M_v(i_idx, j_idx);
 
     double result = particle_v + (x_start_y_start + x_start_y_end + x_end_y_start + x_end_y_end);

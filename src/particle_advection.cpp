@@ -17,6 +17,6 @@ void advect_particle_2d(Eigen::MatrixXd &M_particles, Eigen::VectorXd &u, Eigen:
         k4 = particle_pos + dt * k3;
 
         particle_pos += (dt / 6) * (k1 + 2 * k2 + 2 * k3 + k4);
-        M_particles.row(i) = particle_pos;    
+        M_particles.row(i) = k1;    
     }
 }

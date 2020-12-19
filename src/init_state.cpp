@@ -25,6 +25,7 @@ void init_state_2d(const int bb_size_x,const int bb_size_y,
                 const double grid_interval, const int num_particles, 
                 Eigen::MatrixXd &M_particles,
                 Eigen::MatrixXd &M_fluid,
+                std::vector<int> marker_index,
                 Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v, 
                 Eigen::VectorXd &M_particles_u, Eigen::VectorXd &M_particles_v, 
                 Eigen::MatrixXd &M_pressures)
@@ -37,13 +38,13 @@ void init_state_2d(const int bb_size_x,const int bb_size_y,
     M_u = Eigen::MatrixXd(bb_size_y,bb_size_x + 1);
     M_v = Eigen::MatrixXd(bb_size_y + 1,bb_size_x);
     M_fluid = Eigen::MatrixXd(bb_size_y,bb_size_x);
-
+    marker_index = std::vector<int>();
     M_u.setZero();
     M_v.setZero();
     M_pressures.setZero();
     M_particles_u.setZero();
     M_particles_v.setZero();
-    M_fluid.setOnes();
+    M_fluid.setZero();
 
     /* initialize particle position at random positions within boundaries */
     const int boundary_x = (int)(bb_size_x * grid_interval);
@@ -60,5 +61,6 @@ void init_state_2d(const int bb_size_x,const int bb_size_y,
         get_matrix_index_2d((int)M_particles(i, 0)/grid_interval,(int)M_particles(i, 1)/grid_interval,bb_size_x,bb_size_y,i_idx,j_idx);        
         // std::cout << "init_state: i_idx -> " << i_idx << " j_idx " << j_idx << std::endl;
         M_fluid(i_idx, j_idx) = 1;
+        marker_index.push_back(i);
     }
 }

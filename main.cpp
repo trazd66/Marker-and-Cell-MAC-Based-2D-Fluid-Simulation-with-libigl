@@ -21,6 +21,9 @@
 #include <FLIP.h>
 #include <external_force_apply.h>
 #include <particle_advection.h>
+#include <update_markers.h>
+
+
 int iteration_counter = 0;
 
 //Simulation State
@@ -30,12 +33,12 @@ bool is2d = true;
 double rho = 10.0; // density of water
 double t = 0;      //simulation time
 double dt = 0.005; //time step
-double FLIP_potion = 0.5; // percentage of FLIP result in particle velocity outof (FLIP + PIC)
+double FLIP_potion = 0; // percentage of FLIP result in particle velocity outof (FLIP + PIC)
 
 const int bb_size_x = 50; // x dimension of the bounding box -> number of grids in x axis
 const int bb_size_y = 50; // y dimension of the bounding box -> number of grids in y axis
 const double grid_interval = 0.1; // size of the grid interval, determines the number of grid cells
-const int num_particles = 100000; // number of particles
+const int num_particles = 1000; // number of particles
 Eigen::MatrixXd M_particles; // the particle matrix
 Eigen::VectorXd M_particles_u; // particle velocity u
 Eigen::VectorXd M_particles_v; // particle velocity v
@@ -43,6 +46,7 @@ Eigen::MatrixXd M_u; // M_u a 2D matrix that contains the x velociies of the gri
 Eigen::MatrixXd M_v; // M_v a 2D matrix that contains the y velociies of the grid
 Eigen::MatrixXd M_pressure; // Grid pressure matrix
 Eigen::MatrixXd M_fluid; //Signed_distance matrix
+std::vector<int> marker_index;//
 
 void simulate()
 {
@@ -71,11 +75,6 @@ void simulate()
 
         // std::cout << "iteration " << iteration_counter++ << std::endl;
 
-        //advection, a.k.a moving the particle
-        // advect_particle_2d(M_particles, M_particles_u, M_particles_v, dt);
-
-        // clip the particle positions
-        M_particles = M_particles.cwiseMin(grid_interval * bb_size_x).cwiseMax(0);
 
         //    old M_u and M_v for calculating delta_M_u and delta_M_v in FLIP
         // Eigen::MatrixXd old_M_u;
@@ -96,13 +95,14 @@ void simulate()
            u_particle_onto_grid_u(M_u, particle_pos, u_particle, grid_interval, grid_interval, bb_size_x, bb_size_y);
         }
 
-        //apply external forces
-        apply_external_force_2d(M_u,M_v,dt);
         
 
         // normalize grid to make sure we have a sane grid velocity
         normalize_grid(M_u, M_v);
         // std::cout <<"particle_grid_complete"<<'\n';
+
+        //apply external forces
+        apply_external_force_2d(M_u,M_v,dt);
 
         // 4.
         Eigen::SparseMatrixd A;
@@ -143,15 +143,19 @@ void simulate()
         // adjust the timestep according to u and v
         update_dt(dt, num_particles, grid_interval, M_particles_u, M_particles_v);
 
+
+        //advection, a.k.a moving the particle
+        advect_particle_2d(M_particles, M_particles_u, M_particles_v, dt);
+        update_markers_2d(M_particles,marker_index,grid_interval,M_fluid);
+        // clip the particle positions
+        M_particles = M_particles.cwiseMin(grid_interval * bb_size_x).cwiseMax(0);
+
         // TODO: remove this
         //////////////////////////////////////////////////
         // std::cout << "dt -> " << dt << std::endl;
         // sleep(0.8);
         /////////////////////////////////////////////////
 
-
-        M_particles.col(0) += M_particles_u * dt;
-        M_particles.col(1) += M_particles_v * dt;
 
         t += dt;
     }
@@ -201,6 +205,7 @@ int main(int argc, char **argv)
                 grid_interval,num_particles, 
                 M_particles,
                 M_fluid,
+                marker_index,
                 M_u, M_v, 
                 M_particles_u, M_particles_v, 
                 M_pressure);

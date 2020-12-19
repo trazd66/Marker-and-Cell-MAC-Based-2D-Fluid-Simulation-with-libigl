@@ -42,7 +42,7 @@ void init_state_2d(const int bb_size_x,const int bb_size_y,
     M_pressures.setZero();
     M_particles_u.setZero();
     M_particles_v.setZero();
-    M_fluid.setOnes();
+    M_fluid.setOnes(); // initialize all grids as fluid cells
 
     /* initialize particle position at random positions within boundaries */
     const int boundary_x = (int)(bb_size_x * grid_interval);

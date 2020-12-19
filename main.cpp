@@ -46,7 +46,7 @@ Eigen::VectorXd M_particles_v; // particle velocity v
 Eigen::MatrixXd M_u; // M_u a 2D matrix that contains the x velociies of the grid
 Eigen::MatrixXd M_v; // M_v a 2D matrix that contains the y velociies of the grid
 Eigen::MatrixXd M_pressure; // Grid pressure matrix
-Eigen::MatrixXd M_fluid; //Signed_distance matrix
+Eigen::MatrixXd M_fluid; // markers for fluid grids, 1 for fluid, 0 for air
 std::vector<int> marker_index;//
 
 void simulate()

@@ -19,29 +19,21 @@ double grid_to_particle_FLIP_u (Eigen::MatrixXd &old_M_u, Eigen::MatrixXd &M_u, 
     Eigen::MatrixXd delta_M_u;
     delta_M_u = M_u - old_M_u;
 
-    // std::cout << "*** PIC_u -> " << grid_x_start << "->" << grid_x_end
-    //             << " " << grid_y_start << "->" << grid_y_end
-    //             << " len_x: " << len_x << " len_y: " << len_y <<'\n';
     int i_idx, j_idx;
     get_matrix_index_2d(grid_x_start, grid_y_start, len_x+1, len_y, i_idx, j_idx);
-    // std::cout << "*** PIC_u -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
     double x_start_y_start = (1 / (grid_interval * grid_interval)) * (grid_x_end * grid_interval - particle_x) * (grid_y_end * grid_interval - particle_y) * delta_M_u(i_idx, j_idx);
 
     get_matrix_index_2d(grid_x_start, grid_y_end, len_x+1, len_y, i_idx, j_idx);
-    // std::cout << "*** PIC_u -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
     double x_start_y_end = (1 / (grid_interval * grid_interval)) * (grid_x_end * grid_interval - particle_x) * (particle_y - grid_y_start * grid_interval) * delta_M_u(i_idx, j_idx);
 
     get_matrix_index_2d(grid_x_end, grid_y_start, len_x+1, len_y, i_idx, j_idx);
-    // std::cout << "*** PIC_u -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
     double x_end_y_start = (1 / (grid_interval * grid_interval)) * (particle_x - grid_x_start * grid_interval) * (grid_y_end * grid_interval - particle_y) * delta_M_u(i_idx, j_idx);
 
     get_matrix_index_2d(grid_x_end, grid_y_end, len_x+1, len_y, i_idx, j_idx);
-    // std::cout << "*** PIC_u -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
     double x_end_y_end = (1 / (grid_interval * grid_interval)) * (particle_x - grid_x_start * grid_interval) * (particle_y - grid_y_start * grid_interval) * delta_M_u(i_idx, j_idx);
 
     double result = particle_u + (x_start_y_start + x_start_y_end + x_end_y_start + x_end_y_end);
 
-    // std::cout << "FLIP u ->" << result << std::endl;
     return result;
 }
 
@@ -62,29 +54,20 @@ double grid_to_particle_FLIP_v (Eigen::MatrixXd &old_M_v, Eigen::MatrixXd &M_v, 
     Eigen::MatrixXd delta_M_v;
     delta_M_v = M_v - old_M_v;
 
-    // std::cout << "*** PIC_v -> " << grid_x_start << "->" << grid_x_end
-    //             << " " << grid_y_start << "->" << grid_y_end
-    //             << " len_x: " << len_x << " len_y: " << len_y <<'\n';
     int i_idx, j_idx;
     get_matrix_index_2d(grid_x_start, grid_y_start, len_x, len_y+1, i_idx, j_idx);
-    // std::cout << "*** PIC_v -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
     double x_start_y_start = (1 / (grid_interval * grid_interval)) * (grid_x_end * grid_interval - particle_x) * (grid_y_end * grid_interval - particle_y) * delta_M_v(i_idx, j_idx);
 
     get_matrix_index_2d(grid_x_start, grid_y_end, len_x, len_y+1, i_idx, j_idx);
-    // std::cout << "*** PIC_v -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
     double x_start_y_end = (1 / (grid_interval * grid_interval)) * (grid_x_end * grid_interval - particle_x) * (particle_y - grid_y_start * grid_interval) * delta_M_v(i_idx, j_idx);
 
     get_matrix_index_2d(grid_x_end, grid_y_start, len_x, len_y+1, i_idx, j_idx);
-    // std::cout << "*** PIC_v -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
     double x_end_y_start = (1 / (grid_interval * grid_interval)) * (particle_x - grid_x_start * grid_interval) * (grid_y_end * grid_interval - particle_y) * delta_M_v(i_idx, j_idx);
 
     get_matrix_index_2d(grid_x_end, grid_y_end, len_x, len_y+1, i_idx, j_idx);
-    // std::cout << "*** PIC_v -> " << "i_idx: " << i_idx << " j_idx: " << j_idx << std::endl;
     double x_end_y_end = (1 / (grid_interval * grid_interval)) * (particle_x - grid_x_start * grid_interval) * (particle_y - grid_y_start * grid_interval) * delta_M_v(i_idx, j_idx);
 
     double result = particle_v + (x_start_y_start + x_start_y_end + x_end_y_start + x_end_y_end);
-
-    // std::cout << "FLIP v ->" << result << std::endl;
 
     return result;
 }

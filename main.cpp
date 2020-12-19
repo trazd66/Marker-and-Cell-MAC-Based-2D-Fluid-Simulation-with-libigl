@@ -78,10 +78,10 @@ void simulate()
         M_particles = M_particles.cwiseMin(grid_interval * bb_size_x).cwiseMax(0);
 
         //    old M_u and M_v for calculating delta_M_u and delta_M_v in FLIP
-        Eigen::MatrixXd old_M_u;
-        Eigen::MatrixXd old_M_v;
-        old_M_u = M_u;
-        old_M_v = M_v;
+        // Eigen::MatrixXd old_M_u;
+        // Eigen::MatrixXd old_M_v;
+        // old_M_u = M_u;
+        // old_M_v = M_v;
         M_u.setZero();
         M_v.setZero();
         // 2.

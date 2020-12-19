@@ -32,6 +32,8 @@ void get_matrix_index_2d(const int x ,const int y,
 
 bool on_boundary(const int x, const int len_x);
 
+bool is_out_of_boundary(Eigen::Vector2d particle_pos, double grid_interval, int len_x, int len_y);
+
 /* Ensures particle velocity * dt is strictly less than one grid interval */
 void update_dt(double &dt, int num_particles, double grid_interval, Eigen::VectorXd &M_particles_u, Eigen::VectorXd &M_particles_v);
 

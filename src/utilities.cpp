@@ -14,6 +14,12 @@ bool on_boundary(const int x, const int len_x){
     return (x >= len_x-1 || x <= 0);
 }
 
+bool is_out_of_boundary(Eigen::Vector2d particle_pos, double grid_interval, int len_x, int len_y) {
+	double particle_x = particle_pos[0];
+	double particle_y = particle_pos[1];
+	return 0 <= particle_x && particle_x <= grid_interval * len_x && 0 <= particle_y && particle_y <= grid_interval * len_y;
+}
+
 /* Ensures particle velocity * dt is strictly less than one grid interval */
 void update_dt(double &dt, int num_particles, double grid_interval, Eigen::VectorXd &M_particles_u, Eigen::VectorXd &M_particles_v){
 	double u_max = M_particles_u.cwiseAbs().maxCoeff();

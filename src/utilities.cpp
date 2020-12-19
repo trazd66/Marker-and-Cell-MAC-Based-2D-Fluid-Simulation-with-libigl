@@ -17,7 +17,7 @@ bool on_boundary(const int x, const int len_x){
 bool is_out_of_boundary(Eigen::Vector2d particle_pos, double grid_interval, int len_x, int len_y) {
 	double particle_x = particle_pos[0];
 	double particle_y = particle_pos[1];
-	return 0 <= particle_x && particle_x <= grid_interval * len_x && 0 <= particle_y && particle_y <= grid_interval * len_y;
+	return particle_x < 0 || particle_x > grid_interval * len_x || particle_y < 0 || particle_y > grid_interval * len_y;
 }
 
 /* Ensures particle velocity * dt is strictly less than one grid interval */

@@ -25,14 +25,8 @@ double grid_to_particle_PIC_u (Eigen::MatrixXd &M_u, Eigen::Vector2d &pos_partic
     double x_end_y_end = 0.0;
 
     get_matrix_index_2d(grid_x_start, grid_y_start, len_x+1, len_y, i_idx, j_idx);
-<<<<<<< HEAD
-    ASSERT((i_idx >= 0) && (i_idx <= len_y - 1), "i_idx -> " << i_idx << particle_x << ' ' << particle_y);
-    ASSERT((j_idx >= 0) && (j_idx <= len_x), "j_idx -> " << j_idx);
-    double x_start_y_start = (1 / (interval_x * interval_y)) * (grid_x_end * interval_x - particle_x) * (grid_y_end * interval_y - particle_y) * M_u(i_idx, j_idx);
-=======
     if((i_idx >= 0) && (i_idx <= len_y - 1) && (j_idx >= 0) && (j_idx <= len_x))
         x_start_y_start = (1 / (interval_x * interval_y)) * (grid_x_end * interval_x - particle_x) * (grid_y_end * interval_y - particle_y) * M_u(i_idx, j_idx);
->>>>>>> c89670e34b0479c7c09fe532b60af5e28a55e63f
 
     get_matrix_index_2d(grid_x_start, grid_y_end, len_x+1, len_y, i_idx, j_idx);
     if((i_idx >= 0) && (i_idx <= len_y - 1) && (j_idx >= 0) && (j_idx <= len_x))

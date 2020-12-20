@@ -31,7 +31,7 @@ int iteration_counter = 0;
 bool simulating = true;
 bool is2d = true;
 
-double rho = 10.0; // density of water
+double rho = 1000.0; // density of water
 double t = 0;      //simulation time
 double dt = 0.005; //time step
 double FLIP_potion = 0; // percentage of FLIP result in particle velocity outof (FLIP + PIC)
@@ -39,7 +39,7 @@ double FLIP_potion = 0; // percentage of FLIP result in particle velocity outof 
 const int bb_size_x = 50; // x dimension of the bounding box -> number of grids in x axis
 const int bb_size_y = 50; // y dimension of the bounding box -> number of grids in y axis
 const double grid_interval = 0.1; // size of the grid interval, determines the number of grid cells
-const int num_particles = 400; // number of particles
+int num_particles; // number of particles
 Eigen::MatrixXd M_particles; // the particle matrix
 Eigen::VectorXd M_particles_u; // particle velocity u
 Eigen::VectorXd M_particles_v; // particle velocity v

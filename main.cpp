@@ -86,8 +86,8 @@ void simulate()
            particle_pos = M_particles.row(i).transpose();
            double u_particle = M_particles_u[i];
            double v_particle = M_particles_v[i];
-           v_particle_onto_grid_v(M_v, particle_pos, v_particle, grid_interval, grid_interval, bb_size_x, bb_size_y);
-           u_particle_onto_grid_u(M_u, particle_pos, u_particle, grid_interval, grid_interval, bb_size_x, bb_size_y);
+           v_particle_onto_grid_v(M_v, particle_pos, v_particle, grid_interval, bb_size_x, bb_size_y);
+           u_particle_onto_grid_u(M_u, particle_pos, u_particle, grid_interval, bb_size_x, bb_size_y);
         }
 
         //advection, a.k.a moving the particle
@@ -126,8 +126,8 @@ void simulate()
             double u_particle = M_particles_u[i];
             double v_particle = M_particles_v[i];
 
-            double new_u_PIC = grid_to_particle_PIC_u (M_u, particle_pos, grid_interval, grid_interval, bb_size_x, bb_size_y);
-            double new_v_PIC = grid_to_particle_PIC_v (M_v, particle_pos, grid_interval, grid_interval, bb_size_x, bb_size_y);
+            double new_u_PIC = grid_to_particle_PIC_u (M_u, particle_pos, grid_interval, bb_size_x, bb_size_y);
+            double new_v_PIC = grid_to_particle_PIC_v (M_v, particle_pos, grid_interval, bb_size_x, bb_size_y);
 
             double new_u_FLIP = grid_to_particle_FLIP_u(old_M_u, M_u, particle_pos, u_particle, grid_interval, bb_size_x, bb_size_y);
             double new_v_FLIP = grid_to_particle_FLIP_v(old_M_v, M_v, particle_pos, v_particle, grid_interval, bb_size_x, bb_size_y);

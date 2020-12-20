@@ -41,28 +41,27 @@ void assemble_pressure_A_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v,
                 if(!on_boundary(x+1,x_len_non_staggered)){//right
                     num_fluid_cells++;
                 }
-                A_triplets.push_back(Eigen::Triplet<double>(idx,idx,1));
- 
+                A_triplets.push_back(Eigen::Triplet<double>(idx,idx,num_fluid_cells));
+
+                
                 if(M_fluid(center_idx_i,center_idx_j) == 1){
+
                     get_matrix_index_2d(x+1,y,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
-                    if(on_boundary(x+1,x_len_non_staggered) && M_fluid(i_idx,j_idx) == 1){
-                        A_triplets.push_back(Eigen::Triplet<double>(idx,i_idx * y_len_non_staggered + j_idx,1));
-                        get_matrix_index_2d(x,y-1,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
-                        A_triplets.push_back(Eigen::Triplet<double>(i_idx * y_len_non_staggered + j_idx,idx,1));//symmetric
+                    if(!on_boundary(x+1,x_len_non_staggered) && M_fluid(i_idx,j_idx) == 1){
+
+                        A_triplets.push_back(Eigen::Triplet<double>(idx,i_idx * y_len_non_staggered + j_idx,-1.));
+                        A_triplets.push_back(Eigen::Triplet<double>(i_idx * y_len_non_staggered + j_idx,idx,-1.));//symmetric
                     }
 
                     get_matrix_index_2d(x,y+1,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
-                    if(on_boundary(y+1,y_len_non_staggered) && M_fluid(i_idx,j_idx) == 1){
-                        A_triplets.push_back(Eigen::Triplet<double>(idx,i_idx * y_len_non_staggered + j_idx,1));
-                        get_matrix_index_2d(x-1,y,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
-                        A_triplets.push_back(Eigen::Triplet<double>(i_idx * y_len_non_staggered + j_idx,idx,1));//symmetric
+                    if(!on_boundary(y+1,y_len_non_staggered) && M_fluid(i_idx,j_idx) == 1){
+                        A_triplets.push_back(Eigen::Triplet<double>(idx,i_idx * y_len_non_staggered + j_idx,-1.));
+                        A_triplets.push_back(Eigen::Triplet<double>(i_idx * y_len_non_staggered + j_idx,idx,-1.));//symmetric
                     }
-
                 }
  
             }
         }
         A.setFromTriplets(A_triplets.begin(),A_triplets.end());
-        // std::cout << A;
 
 }

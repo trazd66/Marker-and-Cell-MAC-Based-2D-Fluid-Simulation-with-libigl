@@ -79,6 +79,11 @@ void simulate()
         M_u.setZero();
         M_v.setZero();
         // 2.
+
+        // std:: cout << M_particles << '\n';
+        // std:: cout << M_particles_u << '\n';
+        // std:: cout << M_particles_v << '\n';
+
         for (int i = 0; i < num_particles; i++) {
            // 3.
            Eigen::Vector2d particle_pos;
@@ -92,6 +97,9 @@ void simulate()
 
         //advection, a.k.a moving the particle
         advect_particle_2d(M_particles, M_particles_u, M_particles_v, dt, M_u, M_v, grid_interval, bb_size_x, bb_size_y);
+        std::cout <<"advection_complete" <<'\n';
+        // std:: cout << M_u << '\n';
+        // std:: cout << M_v << '\n';
         update_markers_2d(M_particles,grid_interval,M_fluid);
         
         extrapolate_velocity_2d(M_u,M_v,M_fluid);
@@ -121,6 +129,7 @@ void simulate()
             particle_pos = M_particles.row(i).transpose();
             double u_particle = M_particles_u[i];
             double v_particle = M_particles_v[i];
+            // std::cout << particle_pos << " " << i << '\n';
 
             double new_u_PIC = grid_to_particle_PIC_u (M_u, particle_pos, grid_interval, grid_interval, bb_size_x, bb_size_y);
             double new_v_PIC = grid_to_particle_PIC_v (M_v, particle_pos, grid_interval, grid_interval, bb_size_x, bb_size_y);

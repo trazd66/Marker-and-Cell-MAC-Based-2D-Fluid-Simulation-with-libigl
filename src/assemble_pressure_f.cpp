@@ -36,6 +36,24 @@ void assemble_pressure_f_2d(double rho, double dx, double dy, double dt,
                     get_matrix_index_2d(x+1,y,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
                     f[idx] += M_u(i_idx,j_idx);
 
+                    if(on_boundary(x-1,x_len_non_staggered)){
+                        get_matrix_index_2d(x,y,x_len,y_len_non_staggered,i_idx,j_idx);
+                        f[idx] -= M_u(i_idx,j_idx);
+                    }
+                    if(on_boundary(x+1,x_len_non_staggered)){
+                        get_matrix_index_2d(x+1,y,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
+                        f[idx] += M_u(i_idx,j_idx);                        
+                    }
+                    if(on_boundary(y-1,y_len_non_staggered)){
+                        get_matrix_index_2d(x,y,x_len_non_staggered,y_len,i_idx,j_idx);
+                        f[idx] -= M_v(i_idx,j_idx);                        
+                    }
+                    if(on_boundary(y+1,y_len_non_staggered)){
+                        get_matrix_index_2d(x,y+1,x_len_non_staggered,y_len,i_idx,j_idx);
+                        f[idx] += M_v(i_idx,j_idx);                        
+                    }
+
+
                 }
             }
 

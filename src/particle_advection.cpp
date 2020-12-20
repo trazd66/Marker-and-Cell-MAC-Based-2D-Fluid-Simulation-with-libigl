@@ -14,23 +14,23 @@ void advect_particle_2d(Eigen::MatrixXd &M_particles, Eigen::VectorXd &u, Eigen:
 
         Eigen::Vector2d k2_velocity;
         Eigen::Vector2d particle_pos_k2 =  particle_pos + 0.5 * dt * k1;
-        if (is_out_of_boundary(particle_pos_k2, grid_interval, len_x, len_y)) {
-            k2.setZero();
-        } else {
-            k2[0] = grid_to_particle_PIC_u(M_u, particle_pos_k2, grid_interval, grid_interval, len_x, len_y);
-            k2[1] = grid_to_particle_PIC_v(M_v, particle_pos_k2, grid_interval, grid_interval, len_x, len_y);
-        }
+        // if (is_out_of_boundary(particle_pos_k2, grid_interval, len_x, len_y)) {
+        //     k2.setZero();
+        // } else {
+        //     k2[0] = grid_to_particle_PIC_u(M_u, particle_pos_k2, grid_interval, grid_interval, len_x, len_y);
+        //     k2[1] = grid_to_particle_PIC_v(M_v, particle_pos_k2, grid_interval, grid_interval, len_x, len_y);
+        // }
 
-        Eigen::Vector2d k3_velocity;
-        Eigen::Vector2d particle_pos_k3 =  particle_pos + 0.75 * dt * k2;
-        if (is_out_of_boundary(particle_pos_k3, grid_interval, len_x, len_y)) {
-            k3.setZero();
-        } else {
-            k3[0] = grid_to_particle_PIC_u(M_u, particle_pos_k3, grid_interval, grid_interval, len_x, len_y);
-            k3[1] = grid_to_particle_PIC_v(M_v, particle_pos_k3, grid_interval, grid_interval, len_x, len_y);
-        }
+        // Eigen::Vector2d k3_velocity;
+        // Eigen::Vector2d particle_pos_k3 =  particle_pos + 0.75 * dt * k2;
+        // if (is_out_of_boundary(particle_pos_k3, grid_interval, len_x, len_y)) {
+        //     k3.setZero();
+        // } else {
+        //     k3[0] = grid_to_particle_PIC_u(M_u, particle_pos_k3, grid_interval, grid_interval, len_x, len_y);
+        //     k3[1] = grid_to_particle_PIC_v(M_v, particle_pos_k3, grid_interval, grid_interval, len_x, len_y);
+        // }
 
-        particle_pos += (2.0 / 9.0) * dt * k1 + (3.0 / 9.0) * dt * k2 + (4.0 / 9.0) * dt * k3;
-        M_particles.row(i) = particle_pos;
+        // particle_pos += (2.0 / 9.0) * dt * k1 + (3.0 / 9.0) * dt * k2 + (4.0 / 9.0) * dt * k3;
+        M_particles.row(i) = particle_pos_k2;
     }
 }

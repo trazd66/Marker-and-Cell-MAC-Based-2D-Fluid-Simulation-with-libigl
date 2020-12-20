@@ -53,7 +53,7 @@ void init_state_2d(const int bb_size_x,const int bb_size_y,
         // const int boundary_y = (int)(bb_size_y * grid_interval + 1);
 
         /* 40% ~ 60% interval for initializing particles */
-        M_particles(i, 0) = ((double)(rand() % 21 + 40) / 100.0) * boundary_x;
-        M_particles(i, 1) = ((double)(rand() % 21 + 40) / 100.0) * boundary_y;
+        M_particles(i, 0) = ((double)(rand() % 21 + 40.) / 100.0) * boundary_x;
+        M_particles(i, 1) = ((double)(rand() % 21 + 40.) / 100.0) * boundary_y;
     }
 }

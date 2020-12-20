@@ -92,6 +92,10 @@ void simulate()
 
         //advection, a.k.a moving the particle
         advect_particle_2d(M_particles, M_particles_u, M_particles_v, dt, M_u, M_v, grid_interval, bb_size_x, bb_size_y);
+
+        // clip the particle positions
+        M_particles = M_particles.cwiseMin(grid_interval * bb_size_x).cwiseMax(0);
+
         update_markers_2d(M_particles,grid_interval,M_fluid);
         
         extrapolate_velocity_2d(M_u,M_v,M_fluid);
@@ -142,11 +146,6 @@ void simulate()
         // normalize_velocity(M_particles_u, M_particles_v);
         // adjust the timestep according to u and v
         update_dt(dt, num_particles, grid_interval, M_particles_u, M_particles_v);
-
-
-
-        // clip the particle positions
-        M_particles = M_particles.cwiseMin(grid_interval * bb_size_x).cwiseMax(0);
 
         // TODO: remove this
         //////////////////////////////////////////////////

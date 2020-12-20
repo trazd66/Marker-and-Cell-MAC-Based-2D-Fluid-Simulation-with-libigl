@@ -52,8 +52,13 @@ void init_state_2d(const int bb_size_x,const int bb_size_y,
         // const int boundary_x = (int)(bb_size_x * grid_interval + 1);
         // const int boundary_y = (int)(bb_size_y * grid_interval + 1);
 
-        /* 40% ~ 60% interval for initializing particles */
-        M_particles(i, 0) = ((double)(rand() % 21 + 40.) / 100.0) * boundary_x;
-        M_particles(i, 1) = ((double)(rand() % 21 + 40.) / 100.0) * boundary_y;
+        /*
+            randome float 0 ~ 1 inclusive, here set to 0.4 ~ 0.6 inclusive
+            Ref: https://www.softwaretestinghelp.com/random-number-generator-cpp/#:~:text=C%2B%2B%20Random%20Float,-The%20rand%20()&text=We%20can%20generate%20float%20random,and%201.0%20(both%20inclusive).
+        */
+        float random_float_x = 0.4 + 0.2 * ((float)rand()/RAND_MAX);
+        float random_float_y = 0.4 + 0.2 * ((float)rand()/RAND_MAX);
+        M_particles(i, 0) = (random_float_x * boundary_x);
+        M_particles(i, 1) = (random_float_y * boundary_y);
     }
 }

@@ -77,3 +77,16 @@ void normalize_grid(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v) {
         M_v /= v_max;
     }
 }
+
+void get_bilinear_coeff(Eigen::Vector4d &coeff, double grid_interval, int grid_x_start, int grid_x_end, int grid_y_start, int grid_y_end, double particle_x, double particle_y) {
+	// for the sake of readability
+    double x_start_y_start_portion = (1 / (grid_interval * grid_interval)) * (grid_x_end * grid_interval - particle_x) * (grid_y_end * grid_interval - particle_y);
+    double x_start_y_end_portion = (1 / (grid_interval * grid_interval)) * (grid_x_end * grid_interval - particle_x) * (particle_y - grid_y_start * grid_interval);
+    double x_end_y_start_portion = (1 / (grid_interval * grid_interval)) * (particle_x - grid_x_start * grid_interval) * (grid_y_end * grid_interval - particle_y);
+    double x_end_y_end_portion = (1 / (grid_interval * grid_interval)) * (particle_x - grid_x_start * grid_interval) * (particle_y - grid_y_start * grid_interval);
+
+    coeff[0] = x_start_y_start_portion;
+    coeff[1] =  x_start_y_end_portion;
+    coeff[2] =  x_end_y_start_portion;
+    coeff[3] =  x_end_y_end_portion;
+}

@@ -7,7 +7,9 @@
     Returns updated u velocity for the particle.
 */
 double grid_to_particle_PIC_u (Eigen::MatrixXd &M_u, Eigen::Vector2d &pos_particle, double interval_x, double interval_y, const int len_x,const int len_y) {
-    assert(interval_x * interval_y != 0 && "intervals should not be 0.");
+
+    if (is_out_of_boundary(pos_particle, interval_x, len_x, len_y)) return 0;
+
     /* pos_particle -> (x,y) */
     double particle_x = pos_particle[0];
     double particle_y = pos_particle[1];
@@ -48,7 +50,9 @@ double grid_to_particle_PIC_u (Eigen::MatrixXd &M_u, Eigen::Vector2d &pos_partic
     Returns updated v velocity for the particle.
 */
 double grid_to_particle_PIC_v (Eigen::MatrixXd &M_v, Eigen::Vector2d &pos_particle, double interval_x, double interval_y, const int len_x,const int len_y) {
-    assert(interval_x * interval_y != 0 && "intervals should not be 0.");
+
+    if (is_out_of_boundary(pos_particle, interval_x, len_x, len_y)) return 0;
+
     /* pos_particle -> (x,y) */
     double particle_x = pos_particle[0];
     double particle_y = pos_particle[1];

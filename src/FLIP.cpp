@@ -9,6 +9,9 @@
 */
 double grid_to_particle_FLIP_u (Eigen::MatrixXd &old_M_u, Eigen::MatrixXd &M_u, Eigen::Vector2d &pos_particle, double particle_u, double grid_interval, const int len_x,const int len_y) {
     /* pos_particle -> (x,y) */
+
+    if (is_out_of_boundary(pos_particle, grid_interval, len_x, len_y)) return 0;
+
     double particle_x = pos_particle[0];
     double particle_y = pos_particle[1];
     int grid_x_start = (int)(particle_x / grid_interval);
@@ -51,6 +54,9 @@ double grid_to_particle_FLIP_u (Eigen::MatrixXd &old_M_u, Eigen::MatrixXd &M_u, 
     Returns updated v velocity for the particle.
 */
 double grid_to_particle_FLIP_v (Eigen::MatrixXd &old_M_v, Eigen::MatrixXd &M_v, Eigen::Vector2d &pos_particle, double particle_v, double grid_interval, const int len_x,const int len_y) {
+
+    if (is_out_of_boundary(pos_particle, grid_interval, len_x, len_y)) return 0;
+
     /* pos_particle -> (x,y) */
     double particle_x = pos_particle[0];
     double particle_y = pos_particle[1];

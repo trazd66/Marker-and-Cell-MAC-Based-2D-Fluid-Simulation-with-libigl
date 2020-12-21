@@ -12,17 +12,12 @@ void grid_pressure_gradient_update_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v
                                       double dx)
 {
 
-
     Eigen::VectorXd p;
     solve_pressure_p(p, A, f);
-    
-    // std::cout << f.cwiseAbs().maxCoeff() << '\n';
+
     // Calculate the pressure gradient using the pressure p
     // Construct big D to calculate the pressure gradient
     // then use the pressure gradient to update M_u and M_v
-    std::cout << "p max: " << p.maxCoeff() << '\n';
-    std::cout << "p min: " << p.minCoeff() << '\n';
-    // std::cout << p << '\n';
     int x_len = M_u.cols();
     int y_len = M_v.rows();
     int x_len_non_staggered = x_len - 1;
@@ -35,10 +30,10 @@ void grid_pressure_gradient_update_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v
     {
         for (int y = 0; y < y_len_non_staggered; y++)
         {
-            int i_idx,j_idx;
-            get_matrix_index_2d(x,y,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
+            int i_idx, j_idx;
+            get_matrix_index_2d(x, y, x_len_non_staggered, y_len_non_staggered, i_idx, j_idx);
             int idx = i_idx * y_len_non_staggered + j_idx;
-            M_pressure(i_idx,j_idx) = p[idx];
+            M_pressure(i_idx, j_idx) = p[idx];
         }
     }
     // std::cout << M_pressure.cwiseAbs().maxCoeff() << '\n';
@@ -47,21 +42,20 @@ void grid_pressure_gradient_update_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v
     {
         for (int y = 0; y < y_len_non_staggered; y++)
         {
-            int i_idx,j_idx;
-            get_matrix_index_2d(x,y,x_len_non_staggered,y_len_non_staggered,i_idx,j_idx);
-			if (i_idx != 0) {
+            int i_idx, j_idx;
+            get_matrix_index_2d(x, y, x_len_non_staggered, y_len_non_staggered, i_idx, j_idx);
+            if (i_idx != 0)
+            {
 
-				double du = (dt / (rho * dx)) * (M_pressure(i_idx,j_idx) - M_pressure(i_idx-1,j_idx));
-				M_u(i_idx,j_idx)-= du;
-			}
-			if (j_idx != 0) {
+                double du = (dt / (rho * dx)) * (M_pressure(i_idx, j_idx) - M_pressure(i_idx - 1, j_idx));
+                M_u(i_idx, j_idx) -= du;
+            }
+            if (j_idx != 0)
+            {
 
-				double dv = (dt / (rho * dx)) * (M_pressure(i_idx,j_idx) - M_pressure(i_idx,j_idx-1));
-				M_v(i_idx,j_idx) -= dv;
-			}
+                double dv = (dt / (rho * dx)) * (M_pressure(i_idx, j_idx) - M_pressure(i_idx, j_idx - 1));
+                M_v(i_idx, j_idx) -= dv;
+            }
         }
     }
-
-   
-
 }

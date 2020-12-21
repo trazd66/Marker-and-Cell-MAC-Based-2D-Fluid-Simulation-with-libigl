@@ -42,3 +42,5 @@ void normalize_velocity(Eigen::VectorXd &M_particles_u, Eigen::VectorXd &M_parti
 void normalize_grid(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v);
 
 void get_bilinear_coeff(Eigen::Vector4d &coeff, double grid_interval, int grid_x_start, int grid_x_end, int grid_y_start, int grid_y_end, double particle_x, double particle_y);
+
+void particle_pos_to_grid(int &grid_x, int &grid_y, double x, double y, double grid_interval);

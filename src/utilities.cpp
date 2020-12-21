@@ -104,3 +104,9 @@ void get_bilinear_coeff(Eigen::Vector4d &coeff, double grid_interval, int grid_x
 	coeff[2] = x_end_y_start_portion;
 	coeff[3] = x_end_y_end_portion;
 }
+
+void particle_pos_to_grid(int &grid_x, int &grid_y, double x, double y, double grid_interval){
+	grid_x = (int)(x / grid_interval);
+	grid_y = (int)(y / grid_interval);
+
+}

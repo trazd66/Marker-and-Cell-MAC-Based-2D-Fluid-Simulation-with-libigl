@@ -42,19 +42,19 @@ void grid_pressure_gradient_update_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v
     {
         for (int y = 0; y < y_len_non_staggered; y++)
         {
-            int i_idx, j_idx;
-            get_matrix_index_2d(x, y, x_len_non_staggered, y_len_non_staggered, i_idx, j_idx);
-            if (i_idx != 0)
+            int i_idx, j_idx, i,j;
+            get_matrix_index_2d(x, y, x_len_non_staggered, y_len_non_staggered, i,j);
+            if (!on_boundary(x-1,x_len_non_staggered))
             {
-
-                double du = (dt / (rho * dx)) * (M_pressure(i_idx, j_idx) - M_pressure(i_idx - 1, j_idx));
-                M_u(i_idx, j_idx) -= du;
+                get_matrix_index_2d(x - 1, y, x_len_non_staggered, y_len_non_staggered, i_idx, j_idx);
+                double du = (dt / (rho * dx)) * ( M_pressure(i,j) - M_pressure(i_idx, j_idx));
+                M_u(i,j) -= du;
             }
-            if (j_idx != 0)
+            if (!on_boundary(y-1,y_len_non_staggered))
             {
-
-                double dv = (dt / (rho * dx)) * (M_pressure(i_idx, j_idx) - M_pressure(i_idx, j_idx - 1));
-                M_v(i_idx, j_idx) -= dv;
+                get_matrix_index_2d(x , y - 1, x_len_non_staggered, y_len_non_staggered, i_idx, j_idx);
+                double dv = (dt / (rho * dx)) * (M_pressure(i,j) - M_pressure(i_idx, j_idx));
+                M_v(i,j) -= dv;
             }
         }
     }

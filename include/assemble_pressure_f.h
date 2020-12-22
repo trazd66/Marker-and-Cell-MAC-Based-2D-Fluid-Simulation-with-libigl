@@ -3,17 +3,17 @@
 
 /***
  * Assembles the global pressure vector f in the 2d case, where f_j = (rho / dt) * B *(P^TP) * q_j
- * 
+ *
  * input:
  * double rho
  * double dx
  * double dy
  * double dt
  * Matrix (bb_size_x X bb_size_y + 1 ) M_u
- * Matrix (bb_size_x + 1 X bb_size_y ) M_v 
- * Matrix (bb_size_x X bb_size_y) M_signed_distance, the signed distance matrix for the grid
- * MatrixXd (num_particles X 3) M_particles 
- * 
+ * Matrix (bb_size_x + 1 X bb_size_y ) M_v
+ * Matrix (bb_size_x X bb_size_y) M_fluid marker matrix that marks fluid cells and air cells
+ * MatrixXd (num_particles X 3) M_particles
+ *
  * output:
  * VectorXd (bb_size_x * bb_size_y) f  //flattened grid
  ***/

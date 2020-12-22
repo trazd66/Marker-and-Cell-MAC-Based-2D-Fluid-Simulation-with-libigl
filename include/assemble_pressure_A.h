@@ -3,12 +3,12 @@
 
 /***
  * Assembles the global pressure matrix A in the 2d case, where A_j = B*(P^TP)*D
- * 
+ *
  * input:
  * Matrix (bb_size_x X bb_size_y + 1 ) M_u
  * Matrix (bb_size_x + 1 X bb_size_y ) M_v
  * MatrixXd (num_particles X 3) M_particles
- * Matrix (bb_size_x X bb_size_y) M_signed_distance, the signed distance matrix for the grid
+ * Matrix (bb_size_x X bb_size_y) M_fluid marker matrix that marks fluid cells and air cells
  *
  * output:
  * SparseMatrixd (bb_size_x * bb_size_y X 5) A  //flattened grid

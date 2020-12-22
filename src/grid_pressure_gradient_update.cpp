@@ -1,6 +1,13 @@
 #include <grid_pressure_gradient_update.h>
 #include <pressure_matrix_solve.h>
 #include <utilities.h>
+
+/***
+ * Calculates grid pressures using the equation from lecture slides.
+ * Then updates grid velocities using the new pressures.
+ * https://github.com/dilevin/CSC417-physics-based-animation/blob/master/lectures/10-fluid-simulation-final.pdf
+ * Effect: updates M_u and M_v.
+ ***/
 void grid_pressure_gradient_update_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v,
                                       Eigen::MatrixXd &M_particles,
                                       Eigen::MatrixXd &M_pressure,
@@ -37,8 +44,8 @@ void grid_pressure_gradient_update_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v
             M_pressure(i_idx, j_idx) = p[idx];
         }
     }
-    // std::cout << M_pressure.cwiseAbs().maxCoeff() << '\n';
 
+    // updates grid velocity using the new pressure
     for (int x = 0; x < x_len_non_staggered; x++)
     {
         for (int y = 0; y < y_len_non_staggered; y++)

@@ -45,11 +45,10 @@ Eigen::MatrixXd M_u;              // M_u a 2D matrix that contains the x velocii
 Eigen::MatrixXd M_v;              // M_v a 2D matrix that contains the y velociies of the grid
 Eigen::MatrixXd M_pressure;       // Grid pressure matrix
 Eigen::MatrixXd M_fluid;          // markers for fluid grids, 1 for fluid, 0 for air
-std::vector<int> marker_index;    //
 
 void simulate()
 {
-
+    // stores grid velocities of last iteration, used by FLIP to calculate delta_u and delta_v
     Eigen::MatrixXd old_M_u;
     Eigen::MatrixXd old_M_v;
     old_M_u = M_u;
@@ -59,22 +58,21 @@ void simulate()
     {
 
         /*
-            1. Advection natively satisfied because no acceleration involved during movement of particles.
-            2. update particle velocities due to gravity.
-            3. for each particle update grid velocity (particle -> grid).
-            4. for each particle do pressure projection.
-            5. for each particle update particle velocity from grid (grid -> particle).
+            1. Convert particle velocity to grid velocity with bilinear interpolation.
+            2. Calculate advection with a second order Runge Kutta method.
+            3. Velocity extrapolation from fluid cells onto air cells.
+            4. Apply external forces, gravity in our simplified version.
+            5. Calculate new pressure using equation from lecture slide: A * p = f
+            6. Convert grid velocity back to particle velocity using bilinear interpolation.
         */
 
         M_u.setZero();
         M_v.setZero();
 
-        // 2.
+        // 1.
         for (int i = 0; i < num_particles; i++)
         {
-            // 3.
             Eigen::Vector2d particle_pos;
-
             particle_pos = M_particles.row(i).transpose();
             double u_particle = M_particles_u[i];
             double v_particle = M_particles_v[i];
@@ -82,41 +80,43 @@ void simulate()
             u_particle_onto_grid_u(M_u, particle_pos, u_particle, grid_interval, bb_size_x, bb_size_y);
         }
 
-        
+        // make sure dt * particle_velocity < grid_interval
         double dt_new = dt;
         update_dt(dt_new, num_particles, grid_interval, M_particles_u, M_particles_v);
     	double num_substeps = std::ceil(dt/dt_new);
+
         for( int s = 0; s < num_substeps ; s++ ){
+            // 2.
             advect_particle_2d(M_particles, M_particles_u, M_particles_v, dt/num_substeps, M_u, M_v, grid_interval, bb_size_x, bb_size_y);
         }
-
-        //advection, a.k.a moving the particle
 
         // clip the particle positions
         // M_particles = M_particles.cwiseMin(grid_interval * bb_size_x).cwiseMax(0);
 
+
+        // marks fluid cells and air cells
         update_markers_2d(M_particles, grid_interval, M_fluid);
 
-
-
+        // 3. extrapolate fluid cell velocity onto air cells
         extrapolate_velocity_2d(M_u, M_v, M_fluid);
 
         // normalize grid to make sure we have a sane grid velocity
-
-
         normalize_grid(M_u, M_v);
-        //apply external forces
+
+        // 4. apply external forces
         apply_external_force_2d(M_u, M_v, dt);
 
+        // make sure boundary cells have zero grid velocities
         set_boundary_2d(M_u, M_v);
-        // 4.
+
+        // 5. new pressure calculation using A * p = f
         Eigen::SparseMatrixd A;
         Eigen::VectorXd f;
         assemble_pressure_A_2d(M_u, M_v, M_particles, M_fluid, A);
         assemble_pressure_f_2d(rho, grid_interval, grid_interval, dt, M_u, M_v, M_fluid, M_particles, f);
         grid_pressure_gradient_update_2d(M_u, M_v, M_particles, M_pressure, M_fluid, A, f, rho, dt, grid_interval);
 
-        // 5.
+        // 6.
         for (int i = 0; i < num_particles; i++)
         {
             Eigen::Vector2d particle_pos;
@@ -143,14 +143,14 @@ void simulate()
 
         // normalize particle velocity to make sure we have a sane particle velocity
         // normalize_velocity(M_particles_u, M_particles_v);
-        // adjust the timestep according to u and v
-        // std::cout << dt << '\n';
+
         t += dt;
     }
 }
 
 bool draw(igl::opengl::glfw::Viewer &viewer)
 {
+    /* water particles */
     Eigen::MatrixXd particle_colors(num_particles, 3);
     particle_colors.setOnes();
     viewer.data().set_points(M_particles, particle_colors);
@@ -168,6 +168,7 @@ bool draw(igl::opengl::glfw::Viewer &viewer)
     viewer.data().add_edges(points.row(3), points.row(2), Eigen::RowVector3d(255, 0, 0));
     viewer.data().add_edges(points.row(2), points.row(0), Eigen::RowVector3d(255, 0, 0));
 
+    /* draw corners */
     std::stringstream l1;
     std::stringstream l2;
     std::stringstream l3;

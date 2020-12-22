@@ -30,7 +30,7 @@ void init_state_2d(const int bb_size_x, const int bb_size_y,
                    Eigen::MatrixXd &M_pressures)
 {
 
-    num_particles = 50 * 20 * 4;
+    num_particles = 20 * 20 * 4;
     M_particles = Eigen::MatrixXd(num_particles, 2);
     M_particles_u = Eigen::VectorXd(num_particles);
     M_particles_v = Eigen::VectorXd(num_particles);
@@ -51,9 +51,9 @@ void init_state_2d(const int bb_size_x, const int bb_size_y,
     const int boundary_y = (int)(bb_size_y * grid_interval);
 
     int n = 0;
-    for (int x = 0; x < bb_size_x; x++)
+    for (int x = 20; x < 40; x++)
     {
-        for (int y = 0; y < 20; y++)
+        for (int y = 20; y < 40; y++)
         {
             for (int i = 0; i < 4; i++, n++)
             {

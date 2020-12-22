@@ -69,4 +69,5 @@ void assemble_pressure_A_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v,
         }
     }
     A.setFromTriplets(A_triplets.begin(), A_triplets.end());
+    
 }

@@ -26,6 +26,8 @@ void grid_pressure_gradient_update_2d(Eigen::MatrixXd &M_u, Eigen::MatrixXd &M_v
     int bb_size_x = M_v.rows();
     int bb_size_y = M_u.cols();
 
+    std::cout << "p max: " << p.maxCoeff()<<std::endl;
+    std::cout << "p min: " << p.minCoeff()<<std::endl;
     for (int x = 0; x < x_len_non_staggered; x++)
     {
         for (int y = 0; y < y_len_non_staggered; y++)

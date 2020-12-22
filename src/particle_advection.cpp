@@ -15,10 +15,10 @@ void advect_particle_2d(Eigen::MatrixXd &M_particles, Eigen::VectorXd &u, Eigen:
         k1 = particle_velocity;
 
         Eigen::Vector2d k2_velocity;
-        Eigen::Vector2d particle_pos_k2 = particle_pos + 0.5 * dt * k1;
+        Eigen::Vector2d particle_pos_k2 = particle_pos - 0.5 * dt * k1;
         if (is_out_of_boundary(particle_pos_k2, grid_interval, len_x, len_y))
         {
-            k2.setZero();
+            continue;
         }
         else
         {
@@ -27,10 +27,10 @@ void advect_particle_2d(Eigen::MatrixXd &M_particles, Eigen::VectorXd &u, Eigen:
         }
 
         Eigen::Vector2d k3_velocity;
-        Eigen::Vector2d particle_pos_k3 = particle_pos + 0.75 * dt * k2;
+        Eigen::Vector2d particle_pos_k3 = particle_pos - 0.75 * dt * k2;
         if (is_out_of_boundary(particle_pos_k3, grid_interval, len_x, len_y))
         {
-            k3.setZero();
+            continue;
         }
         else
         {
@@ -39,6 +39,8 @@ void advect_particle_2d(Eigen::MatrixXd &M_particles, Eigen::VectorXd &u, Eigen:
         }
 
         particle_pos += (2.0 / 9.0) * dt * k1 + (3.0 / 9.0) * dt * k2 + (4.0 / 9.0) * dt * k3;
+
+
         M_particles.row(i) = particle_pos;
     }
 }

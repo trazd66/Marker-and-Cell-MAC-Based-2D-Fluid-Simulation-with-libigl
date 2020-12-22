@@ -82,19 +82,29 @@ void simulate()
             u_particle_onto_grid_u(M_u, particle_pos, u_particle, grid_interval, bb_size_x, bb_size_y);
         }
 
+        
+        double dt_new = dt;
+        update_dt(dt_new, num_particles, grid_interval, M_particles_u, M_particles_v);
+    	double num_substeps = std::ceil(dt/dt_new);
+        for( int s = 0; s < num_substeps ; s++ ){
+            advect_particle_2d(M_particles, M_particles_u, M_particles_v, dt/num_substeps, M_u, M_v, grid_interval, bb_size_x, bb_size_y);
+        }
+
         //advection, a.k.a moving the particle
-        advect_particle_2d(M_particles, M_particles_u, M_particles_v, dt, M_u, M_v, grid_interval, bb_size_x, bb_size_y);
 
         // clip the particle positions
-        M_particles = M_particles.cwiseMin(grid_interval * bb_size_x).cwiseMax(0);
+        // M_particles = M_particles.cwiseMin(grid_interval * bb_size_x).cwiseMax(0);
 
         update_markers_2d(M_particles, grid_interval, M_fluid);
+
+
 
         extrapolate_velocity_2d(M_u, M_v, M_fluid);
 
         // normalize grid to make sure we have a sane grid velocity
-        normalize_grid(M_u, M_v);
 
+
+        normalize_grid(M_u, M_v);
         //apply external forces
         apply_external_force_2d(M_u, M_v, dt);
 
@@ -134,8 +144,7 @@ void simulate()
         // normalize particle velocity to make sure we have a sane particle velocity
         // normalize_velocity(M_particles_u, M_particles_v);
         // adjust the timestep according to u and v
-        update_dt(dt, num_particles, grid_interval, M_particles_u, M_particles_v);
-
+        // std::cout << dt << '\n';
         t += dt;
     }
 }

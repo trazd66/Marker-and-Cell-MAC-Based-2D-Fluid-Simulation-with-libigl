@@ -2,7 +2,7 @@
 
 ## Summary
 
-The final project for the course Physics Animations (CSC417) Fall 2020 at the University of Toronto. Currently only a 2D grid based simulation is available. ([final report](https://docs.google.com/document/d/1vo__Ta67T-i1MSSQ-jYLqVYwf1TI6slXclJ3VWIcJeo/edit?usp=sharing))
+The final project for the course Physics Animations (CSC417) Fall 2020 at the University of Toronto. Currently only a 2D grid based simulation is available. ([final report](https://docs.google.com/document/d/1vo__Ta67T-i1MSSQ-jYLqVYwf1TI6slXclJ3VWIcJeo/edit?usp=sharing), [presentation](https://play.library.utoronto.ca/c5c21108428f997270af31b77eb2bf05))
 
 ## Prerequisite installation
 
